@@ -1,0 +1,150 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import {
+  ArrowRight,
+  PhoneCall,
+} from "lucide-react";
+
+export default function CTASection({ city }) {
+
+  const pathname = usePathname();
+
+  const staticRoutes = [
+    "about",
+    "services",
+    "products",
+    "contact",
+    "items",
+    "enquiry",
+  ];
+
+  const pathParts = pathname
+    .split("/")
+    .filter(Boolean);
+
+  const urlDistrict =
+    pathParts.length > 0 &&
+      !staticRoutes.includes(pathParts[0])
+      ? pathParts[0]
+      : "";
+
+  const districtSlug = city
+    ? city.toLowerCase().replace(/\s+/g, "-")
+    : urlDistrict;
+
+  const makeLink = (path) => {
+    if (!districtSlug) return path;
+
+    if (path === "/") {
+      return `/${districtSlug}`;
+    }
+
+    return `/${districtSlug}${path}`;
+  };
+
+  return (
+    <section className="section-padding bg-gradient-to-b from-white to-emerald-50">
+      <div className="container-custom">
+
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: 50,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            duration: 0.6,
+          }}
+          viewport={{
+            once: true,
+          }}
+          className="relative overflow-hidden rounded-[42px] bg-gradient-to-r from-emerald-700 via-emerald-600 to-teal-600 p-10 lg:p-20 text-white shadow-2xl"
+        >
+
+          {/* Background Glow */}
+          <div className="absolute -top-20 -left-20 w-80 h-80 bg-white/10 rounded-full blur-[120px]" />
+
+          <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-teal-300/20 rounded-full blur-[120px]" />
+
+          <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+
+            {/* Left Content */}
+            <div>
+
+              <span className="inline-flex items-center bg-white/15 backdrop-blur-md border border-white/20 px-5 py-2 rounded-full text-sm font-semibold mb-6">
+                Get In Touch
+              </span>
+
+              <h2 className="text-4xl lg:text-6xl font-bold leading-tight">
+                Need Premium
+                <br />
+                Biomedical Solutions?
+              </h2>
+
+              <p className="mt-6 text-white/85 text-lg leading-8 max-w-xl">
+                Discover innovative diagnostic systems,
+                laboratory equipment, and trusted biomedical
+                technologies designed to support modern
+                healthcare excellence.
+              </p>
+
+            </div>
+
+            {/* Right Card */}
+            <div className="flex lg:justify-end">
+
+              <div className="bg-white rounded-[32px] p-8 max-w-md w-full shadow-[0_25px_60px_rgba(0,0,0,0.18)] border border-emerald-100">
+
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white flex items-center justify-center mb-6 shadow-lg">
+                  <PhoneCall size={30} />
+                </div>
+
+                <h3 className="text-2xl font-bold text-slate-900">
+                  Let's Talk
+                </h3>
+
+                <p className="mt-3 text-slate-600 leading-7">
+                  Contact our biomedical specialists for
+                  consultation, equipment recommendations,
+                  installation, and after-sales support.
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-4 mt-8">
+
+                  <Link
+                    href={makeLink("/contact")}
+                    className="flex-1"
+                  >
+                    <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-4 rounded-2xl font-semibold transition-all duration-300 hover:-translate-y-1 hover:shadow-xl flex items-center justify-center gap-2">
+                      Contact Us
+                      <ArrowRight size={18} />
+                    </button>
+                  </Link>
+
+                  <a
+                    href="tel:+919876543210"
+                    className="border-2 border-emerald-600 text-emerald-700 px-6 py-4 rounded-2xl font-semibold hover:bg-emerald-50 transition-all duration-300 text-center"
+                  >
+                    Call Now
+                  </a>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </motion.div>
+
+      </div>
+    </section>
+  );
+}
