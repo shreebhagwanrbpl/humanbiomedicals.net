@@ -32,7 +32,7 @@ export default function SeoContent({ city = "" }) {
 
                     <div className="bg-white rounded-3xl border border-emerald-100 shadow-lg p-8 hover:shadow-xl transition-all duration-300">
                         <p className="text-slate-600 leading-8 text-lg">
-                            Central Biomedicals is a trusted supplier of biomedical
+                            Human Biomedical is a trusted supplier of biomedical
                             and laboratory equipment in <strong>{location}</strong>.
                             We provide CBC Machines, Hematology Analyzers,
                             Biochemistry Analyzers, Urine Analyzers, ELISA Readers,
@@ -63,7 +63,7 @@ export default function SeoContent({ city = "" }) {
 
                     <div className="bg-white rounded-3xl border border-emerald-100 shadow-lg p-8 hover:shadow-xl transition-all duration-300">
                         <p className="text-slate-600 leading-8 text-lg">
-                            Central Biomedicals supplies biomedical equipment across
+                            Human Biomedical supplies biomedical equipment across
                             multiple districts and cities, helping healthcare
                             providers improve testing efficiency, workflow, and
                             diagnostic accuracy with reliable solutions.

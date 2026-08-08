@@ -45,7 +45,7 @@ export default function Footer() {
           doc(
             db,
             "websites",
-            "centralbiomedicals",
+            "humanbiomedicalsnet",
             "pages",
             "contact"
           )
@@ -76,7 +76,7 @@ export default function Footer() {
           doc(
             db,
             "websites",
-            "centralbiomedicals",
+            "humanbiomedicalsnet",
             "districts",
             district
           )
@@ -168,10 +168,10 @@ export default function Footer() {
 
             <h2 className="text-3xl font-bold">
               <span className="text-emerald-400">
-                Central
+                Human
               </span>{" "}
               <span className="text-white">
-                Biomedicals
+                Biomedical
               </span>
             </h2>
 
@@ -290,7 +290,7 @@ export default function Footer() {
         <div className="border-t border-white/10 mt-16 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
 
           <p className="text-slate-400 text-sm">
-            © 2026 <span className="text-white font-semibold">Central Biomedicals</span>. All Rights Reserved.
+            © 2026 <span className="text-white font-semibold"> Human Biomedical</span>. All Rights Reserved.
           </p>
 
           <p className="text-slate-400 text-sm">

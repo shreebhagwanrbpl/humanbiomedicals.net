@@ -69,7 +69,7 @@ export default function ProductDetails({ slug }) {
                     doc(
                         db,
                         "websites",
-                        "centralbiomedicals",
+                        "humanbiomedicalsnet",
                         "pages",
                         "products"
                     )
@@ -92,7 +92,7 @@ export default function ProductDetails({ slug }) {
                     collection(
                         db,
                         "websites",
-                        "centralbiomedicals",
+                        "humanbiomedicalsnet",
                         "pages",
                         "categoryproducts",
                         "categories"
@@ -193,7 +193,7 @@ export default function ProductDetails({ slug }) {
                 collection(
                     db,
                     "websitesQueries",
-                    "centralbiomedicals",
+                    "humanbiomedicalsnet",
                     "productQueries"
                 ),
                 {
@@ -236,7 +236,7 @@ export default function ProductDetails({ slug }) {
                 product.title,
             brand: {
                 "@type": "Brand",
-                name: product.brand || "Central Biomedicals",
+                name: product.brand || " Human Biomedical",
             },
         }
         : null;
@@ -784,11 +784,11 @@ ${product?.desc}
                             <div className="mt-12">
 
                                 <h3 className="text-2xl font-bold mb-4 text-slate-900">
-                                    Why Choose Central Biomedicals in {cityName}?
+                                    Why Choose  Human Biomedical in {cityName}?
                                 </h3>
 
                                 <p className="text-slate-600 leading-8">
-                                    Central Biomedicals is a trusted supplier and
+                                    Human Biomedical is a trusted supplier and
                                     distributor of {product.title} in {cityName}.
                                     We provide high-quality biomedical and laboratory
                                     equipment for hospitals, pathology laboratories,
@@ -831,7 +831,7 @@ ${product?.desc}
                                     </h3>
 
                                     <p className="text-slate-600 leading-8">
-                                        Central Biomedicals supplies {product.title}
+                                        Human Biomedical supplies {product.title}
                                         in {cityName} with technical support,
                                         installation assistance and customer service
                                         for hospitals and laboratories.
@@ -845,7 +845,7 @@ ${product?.desc}
                                     </h3>
 
                                     <p className="text-slate-600 leading-8">
-                                        Central Biomedicals is a trusted dealer of
+                                        Human Biomedical is a trusted dealer of
                                         {product.title} in {cityName}. We supply
                                         biomedical equipment, laboratory instruments,
                                         diagnostic analyzers and healthcare devices
@@ -878,7 +878,7 @@ ${product?.desc}
                                     <p className="text-slate-600 leading-8">
                                         Buy high quality {product.title} in
                                         {cityName} at competitive prices.
-                                        Contact Central Biomedicals for the
+                                        Contact  Human Biomedical for the
                                         latest quotation and product availability.
                                     </p>
 
@@ -1000,7 +1000,7 @@ ${product?.desc}
 
                                     <div>
                                         <h4 className="font-semibold text-lg">
-                                            How can I contact Central Biomedials?
+                                            How can I contact  Human Biomedical?
                                         </h4>
 
                                         <p className="text-slate-600 mt-2">

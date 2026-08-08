@@ -84,7 +84,7 @@ export default function ContactPage() {
         collection(
           db,
           "websitesQueries",
-          "centralbiomedicals",
+          "humanbiomedicalsnet",
           "contactQueries"
         ),
         {
@@ -129,7 +129,7 @@ export default function ContactPage() {
           doc(
             db,
             "websites",
-            "centralbiomedicals",
+            "humanbiomedicalsnet",
             "districts",
             currentDistrict
           )
@@ -152,7 +152,7 @@ export default function ContactPage() {
           doc(
             db,
             "websites",
-            "centralbiomedicals",
+            "humanbiomedicalsnet",
             "pages",
             "contact"
           )
@@ -241,7 +241,7 @@ export default function ContactPage() {
       {/* Banner */}
       <PageBanner
         title="Contact Us"
-        subtitle="Get in touch with Central Biomedicals for premium diagnostic and biomedical solutions."
+        subtitle="Get in touch with  Human Biomedical for premium diagnostic and biomedical solutions."
       />
 
       {/* Contact Section */}

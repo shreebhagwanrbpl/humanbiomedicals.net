@@ -56,11 +56,11 @@ export default function Navbar() {
           <h1 className="text-2xl font-extrabold tracking-tight">
 
             <span className="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">
-              Central
+              Human
             </span>
 
             <span className="text-slate-900">
-              {" "}Biomedicals
+              {" "}Biomedical
             </span>
 
           </h1>
