@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
@@ -46,32 +47,24 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-2xl border-b border-emerald-100 shadow-sm">
-
+    <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-2xl border-b border-emerald-100 shadow-sm">
       <div className="container-custom h-20 flex items-center justify-between">
 
-        {/* Logo */}
-        <Link href={makeLink("/")} className="group">
-
-          <h1 className="text-2xl font-extrabold tracking-tight">
-
-            <span className="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">
-              Human
-            </span>
-
-            <span className="text-slate-900">
-              {" "}Biomedical
-            </span>
-
-          </h1>
-
+        {/* Logo Image */}
+        <Link href={makeLink("/")} className="group flex items-center gap-3">
+          <Image
+            src="/logo.png"
+            alt="Human Biomedicals Logo"
+            width={180}
+            height={55}
+            className="h-12 sm:h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+            priority
+          />
         </Link>
 
         {/* Desktop Menu */}
         <nav className="hidden lg:flex items-center gap-8">
-
           {navLinks.map((link) => (
-
             <Link
               key={link.name}
               href={makeLink(link.path)}
@@ -79,50 +72,38 @@ export default function Navbar() {
             >
               {link.name}
             </Link>
-
           ))}
-
         </nav>
 
         {/* Desktop Button */}
         <div className="hidden lg:block">
-
           <Link href={makeLink("/contact")}>
-
             <button className="px-7 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-semibold shadow-lg hover:shadow-emerald-300/40 hover:scale-105 transition-all duration-300">
               Get Quote
             </button>
-
           </Link>
-
         </div>
 
         {/* Mobile Menu Button */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="lg:hidden w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center border border-emerald-200 transition hover:bg-emerald-100"
+          aria-label="Toggle Navigation Menu"
         >
-          {menuOpen ? (
-            <X size={24} />
-          ) : (
-            <Menu size={24} />
-          )}
+          {menuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
       </div>
 
       {/* Mobile Menu */}
       <div
-        className={`lg:hidden overflow-hidden transition-all duration-300 ${menuOpen ? "max-h-[500px]" : "max-h-0"
-          }`}
+        className={`lg:hidden overflow-hidden transition-all duration-300 ${
+          menuOpen ? "max-h-[500px]" : "max-h-0"
+        }`}
       >
-
         <div className="bg-white border-t border-emerald-100 shadow-lg">
-
           <nav className="flex flex-col p-6">
-
             {navLinks.map((link) => (
-
               <Link
                 key={link.name}
                 href={makeLink(link.path)}
@@ -131,7 +112,6 @@ export default function Navbar() {
               >
                 {link.name}
               </Link>
-
             ))}
 
             <Link
@@ -139,19 +119,13 @@ export default function Navbar() {
               onClick={() => setMenuOpen(false)}
               className="mt-6"
             >
-
               <button className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-semibold shadow-lg hover:shadow-emerald-300/40 transition-all duration-300">
                 Get Quote
               </button>
-
             </Link>
-
           </nav>
-
         </div>
-
       </div>
-
     </header>
   );
 }

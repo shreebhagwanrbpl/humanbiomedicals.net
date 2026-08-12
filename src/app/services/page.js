@@ -1,4 +1,6 @@
 "use client";
+
+import { useEffect, useState } from "react";
 import {
   Microscope,
   FlaskConical,
@@ -6,44 +8,81 @@ import {
   Stethoscope,
   Wrench,
   Activity,
+  HeartPulse,
+  Truck,
+  FileCheck,
+  CheckCircle2,
 } from "lucide-react";
 
 import PageBanner from "@/components/PageBanner";
 import SectionTitle from "@/components/SectionTitle";
 import ServiceCard from "@/components/ServiceCard";
 import CTASection from "@/components/CTASection";
-import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+
 export default function ServicesPage() {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
-  const icons = [
-    <Microscope size={30} />,
-    <FlaskConical size={30} />,
-    <ShieldCheck size={30} />,
-    <Stethoscope size={30} />,
-    <Wrench size={30} />,
-    <Activity size={30} />,
+
+  // Default fallback services if database record is empty or loading
+  const fallbackServices = [
+    {
+      title: "Diagnostic Equipment Supply",
+      desc: "Authorized distribution of 3-Part & 5-Part hematology analyzers, fully automated biochemistry systems, and ISE electrolyte analyzers.",
+      icon: <Activity size={32} className="text-emerald-600" />,
+    },
+    {
+      title: "Installation & Calibration",
+      desc: "Turnkey equipment installation, precise parameter calibration, and control testing carried out by certified biomedical engineers.",
+      icon: <Wrench size={32} className="text-teal-600" />,
+    },
+    {
+      title: "AMC & Preventive Maintenance",
+      desc: "Comprehensive Annual Maintenance Contracts (AMC & CMC) ensuring regular inspection, zero downtime, and long equipment lifespan.",
+      icon: <ShieldCheck size={32} className="text-emerald-600" />,
+    },
+    {
+      title: "Laboratory Setup Consultation",
+      desc: "Expert guidance for hospital and pathology lab layout planning, instrument selection, and regulatory compliance assistance.",
+      icon: <Microscope size={32} className="text-teal-600" />,
+    },
+    {
+      title: "Reagents & Consumables Supply",
+      desc: "Continuous supply of high-grade diluents, lyse solutions, biochemistry reagents, and control serums for precise test results.",
+      icon: <FlaskConical size={32} className="text-emerald-600" />,
+    },
+    {
+      title: "Technical Support & Training",
+      desc: "On-site and remote training for lab technicians, fast troubleshooting response, and 24/7 technical helpdesk.",
+      icon: <Stethoscope size={32} className="text-teal-600" />,
+    },
   ];
+
+  const defaultIcons = [
+    <Activity size={32} className="text-emerald-600" />,
+    <FlaskConical size={32} className="text-teal-600" />,
+    <ShieldCheck size={32} className="text-emerald-600" />,
+    <Stethoscope size={32} className="text-teal-600" />,
+    <Wrench size={32} className="text-emerald-600" />,
+    <Microscope size={32} className="text-teal-600" />,
+  ];
+
   useEffect(() => {
     const fetchServices = async () => {
       try {
         const snap = await getDoc(
-          doc(
-            db,
-            "websites",
-            "humanbiomedicalsnet",
-            "pages",
-            "services"
-          )
+          doc(db, "websites", "humanbiomedicalsnet", "pages", "services")
         );
 
-        if (snap.exists()) {
-          setServices(snap.data().services || []);
+        if (snap.exists() && snap.data().services?.length > 0) {
+          setServices(snap.data().services);
+        } else {
+          setServices(fallbackServices);
         }
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching services:", error);
+        setServices(fallbackServices);
       } finally {
         setLoading(false);
       }
@@ -51,143 +90,111 @@ export default function ServicesPage() {
 
     fetchServices();
   }, []);
+
   return (
     <>
       {/* Banner */}
       <PageBanner
-        title="Our Services"
-        subtitle="Delivering trusted biomedical and diagnostic services with innovation, precision, and healthcare excellence."
+        title="Biomedical & Diagnostic Services"
+        subtitle="Delivering end-to-end equipment distribution, professional installation, calibration, and 24/7 maintenance for healthcare facilities across India."
       />
 
-      {/* Services Grid */}
-      <section className="relative overflow-hidden py-24 bg-gradient-to-b from-white via-emerald-50/40 to-white">
-
-        {/* Background Glow */}
-        <div className="absolute -top-20 -left-20 w-80 h-80 bg-emerald-200/30 rounded-full blur-[120px]" />
-        <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-teal-200/30 rounded-full blur-[120px]" />
+      {/* Services Grid (Light Theme) */}
+      <section className="relative overflow-hidden py-20 lg:py-28 bg-gradient-to-b from-white via-emerald-50/20 to-slate-50">
+        {/* Background Glows */}
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-emerald-200/20 rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-teal-200/20 rounded-full blur-[140px] pointer-events-none" />
 
         <div className="container-custom relative z-10">
-
           <SectionTitle
             badge="What We Offer"
-            title="Premium Biomedical Services"
-            description="We provide innovative healthcare technologies, biomedical equipment, and laboratory solutions designed for modern diagnostics and medical excellence."
+            title="Comprehensive Biomedical Solutions"
+            description="From initial laboratory design to continuous technical maintenance, we provide complete lifecycle support for diagnostic technologies."
             center
           />
 
-          <div className="grid xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 gap-8 mt-16">
-
+          <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-8 mt-16">
             {loading
               ? Array.from({ length: 6 }).map((_, index) => (
-
-                <div
-                  key={index}
-                  className="bg-white rounded-[30px] p-8 border border-emerald-100 shadow-lg animate-pulse"
-                >
-
-                  {/* Icon Skeleton */}
-                  <div className="w-20 h-20 rounded-3xl bg-emerald-100 mb-8"></div>
-
-                  {/* Title */}
-                  <div className="h-7 bg-slate-200 rounded-lg w-3/4 mb-6"></div>
-
-                  {/* Description */}
-                  <div className="space-y-3">
-                    <div className="h-4 bg-slate-200 rounded-full"></div>
-                    <div className="h-4 bg-slate-200 rounded-full w-11/12"></div>
-                    <div className="h-4 bg-slate-200 rounded-full w-8/12"></div>
+                  <div
+                    key={index}
+                    className="bg-white rounded-[32px] p-8 border border-emerald-100 shadow-sm animate-pulse"
+                  >
+                    <div className="w-16 h-16 rounded-2xl bg-emerald-100 mb-6" />
+                    <div className="h-6 bg-slate-200 rounded-lg w-3/4 mb-4" />
+                    <div className="space-y-2">
+                      <div className="h-4 bg-slate-200 rounded-full w-full" />
+                      <div className="h-4 bg-slate-200 rounded-full w-5/6" />
+                    </div>
                   </div>
-
-                </div>
-
-              ))
+                ))
               : services.map((service, index) => (
-
-                <ServiceCard
-                  key={index}
-                  icon={icons[index]}
-                  title={service.title}
-                  description={service.desc}
-                />
-
-              ))}
-
+                  <ServiceCard
+                    key={index}
+                    icon={service.icon || defaultIcons[index % defaultIcons.length]}
+                    title={service.title}
+                    description={service.desc || service.description}
+                  />
+                ))}
           </div>
-
         </div>
-
       </section>
 
-      {/* Working Process */}
-      <section className="relative overflow-hidden py-24 bg-gradient-to-b from-emerald-50/40 via-white to-emerald-50/20">
-
-        {/* Background Glow */}
-        <div className="absolute -top-20 -left-20 w-80 h-80 bg-emerald-200/30 rounded-full blur-[120px]" />
-        <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-teal-200/30 rounded-full blur-[120px]" />
-
+      {/* Structured 3-Step Work Process */}
+      <section className="relative overflow-hidden py-20 bg-slate-50 border-t border-emerald-100">
         <div className="container-custom relative z-10">
-
           <SectionTitle
-            badge="How We Work"
-            title="Simple & Professional Process"
-            description="We follow a streamlined process to deliver reliable biomedical equipment, laboratory systems, and healthcare solutions with complete customer satisfaction."
+            badge="How We Support You"
+            title="Seamless & Professional Workflow"
+            description="We ensure a hassle-free experience from equipment selection to operational deployment."
             center
           />
 
           <div className="grid lg:grid-cols-3 gap-8 mt-16">
-
             {[
               {
                 step: "01",
-                title: "Consultation",
-                desc: "We understand your hospital, laboratory, or diagnostic centre requirements and recommend the most suitable biomedical solutions.",
+                icon: <FileCheck className="w-8 h-8 text-emerald-600" />,
+                title: "Requirements & Consultation",
+                desc: "We analyze your hospital or laboratory throughput requirements, budget, and space to recommend optimal analyzer configurations.",
               },
               {
                 step: "02",
-                title: "Implementation",
-                desc: "Our team supplies, installs, and configures biomedical equipment to ensure smooth and efficient operation.",
+                icon: <Truck className="w-8 h-8 text-teal-600" />,
+                title: "Supply, Setup & Calibration",
+                desc: "Safe transport with protective packaging, followed by professional installation, quality control testing, and technician training.",
               },
               {
                 step: "03",
-                title: "Support",
-                desc: "We provide technical assistance, preventive maintenance, AMC services, and long-term customer support.",
+                icon: <ShieldCheck className="w-8 h-8 text-emerald-600" />,
+                title: "AMC & Long-Term Support",
+                desc: "Continuous technical maintenance, reagent supply guarantees, and emergency engineer assistance for uninterrupted operations.",
               },
             ].map((item, index) => (
-
               <div
                 key={index}
-                className="group relative overflow-hidden bg-white rounded-[32px] border border-emerald-100 p-8 shadow-lg hover:shadow-2xl hover:-translate-y-3 transition-all duration-500"
+                className="group relative overflow-hidden bg-white rounded-[32px] border border-emerald-100 p-8 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
               >
-
-                {/* Top Gradient */}
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-teal-500 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500"></div>
-
-                {/* Step Number */}
-                <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white text-3xl font-extrabold flex items-center justify-center shadow-lg mb-8 group-hover:rotate-6 group-hover:scale-110 transition-all duration-500">
-                  {item.step}
+                <div className="flex items-center justify-between mb-8">
+                  <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-100">
+                    {item.icon}
+                  </div>
+                  <span className="text-3xl font-black text-emerald-600/30 group-hover:text-emerald-600 transition-colors">
+                    {item.step}
+                  </span>
                 </div>
 
-                {/* Title */}
-                <h3 className="text-2xl font-bold text-slate-900 mb-4 group-hover:text-emerald-600 transition-colors duration-300">
+                <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-600 transition-colors">
                   {item.title}
                 </h3>
 
-                {/* Description */}
-                <p className="text-slate-600 leading-8">
+                <p className="text-slate-600 text-sm leading-relaxed">
                   {item.desc}
                 </p>
-
-                {/* Decorative Glow */}
-                <div className="absolute -bottom-10 -right-10 w-28 h-28 bg-emerald-100 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-
               </div>
-
             ))}
-
           </div>
-
         </div>
-
       </section>
 
       {/* CTA */}

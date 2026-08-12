@@ -7,133 +7,123 @@ import {
 } from "firebase/firestore";
 
 export default async function sitemap() {
-    const baseUrl =
-        "https://humanbiomedicals.net";
-
+    const baseUrl = "https://humanbiomedicals.net";
     const urls = [];
 
-    // Static Pages
+    const now = new Date();
+
+    // Static Core Pages (High Priority)
     urls.push(
         {
             url: baseUrl,
-            lastModified: new Date(),
-        },
-        {
-            url: `${baseUrl}/about`,
-            lastModified: new Date(),
-        },
-        {
-            url: `${baseUrl}/services`,
-            lastModified: new Date(),
-        },
-        {
-            url: `${baseUrl}/contact`,
-            lastModified: new Date(),
+            lastModified: now,
+            changeFrequency: "daily",
+            priority: 1.0,
         },
         {
             url: `${baseUrl}/items`,
-            lastModified: new Date(),
+            lastModified: now,
+            changeFrequency: "daily",
+            priority: 0.9,
+        },
+        {
+            url: `${baseUrl}/about`,
+            lastModified: now,
+            changeFrequency: "weekly",
+            priority: 0.8,
+        },
+        {
+            url: `${baseUrl}/services`,
+            lastModified: now,
+            changeFrequency: "weekly",
+            priority: 0.8,
+        },
+        {
+            url: `${baseUrl}/contact`,
+            lastModified: now,
+            changeFrequency: "monthly",
+            priority: 0.7,
         }
     );
 
     try {
         // DISTRICTS
-        const districtSnap =
-            await getDocs(
-                collection(
-                    db,
-                    "websites",
-                    "humanbiomedicalsnet",
-                    "districts"
-                )
-            );
+        const districtSnap = await getDocs(
+            collection(db, "websites", "humanbiomedicalsnet", "districts")
+        );
 
-        const districts =
-            districtSnap.docs.map(
-                (doc) => doc.data()
-            );
+        const districts = districtSnap.docs.map((doc) => doc.data());
 
         districts.forEach((district) => {
-            const slug =
-                district.slug;
-
+            const slug = district.slug;
             if (!slug) return;
 
             urls.push(
                 {
                     url: `${baseUrl}/${slug}`,
-                    lastModified:
-                        new Date(),
-                },
-                {
-                    url: `${baseUrl}/${slug}/about`,
-                    lastModified:
-                        new Date(),
-                },
-                {
-                    url: `${baseUrl}/${slug}/services`,
-                    lastModified:
-                        new Date(),
-                },
-                {
-                    url: `${baseUrl}/${slug}/contact`,
-                    lastModified:
-                        new Date(),
+                    lastModified: now,
+                    changeFrequency: "daily",
+                    priority: 0.85,
                 },
                 {
                     url: `${baseUrl}/${slug}/items`,
-                    lastModified:
-                        new Date(),
+                    lastModified: now,
+                    changeFrequency: "daily",
+                    priority: 0.8,
+                },
+                {
+                    url: `${baseUrl}/${slug}/about`,
+                    lastModified: now,
+                    changeFrequency: "weekly",
+                    priority: 0.7,
+                },
+                {
+                    url: `${baseUrl}/${slug}/services`,
+                    lastModified: now,
+                    changeFrequency: "weekly",
+                    priority: 0.7,
+                },
+                {
+                    url: `${baseUrl}/${slug}/contact`,
+                    lastModified: now,
+                    changeFrequency: "monthly",
+                    priority: 0.6,
                 }
             );
         });
 
         // PRODUCTS
-        const productDoc =
-            await getDoc(
-                doc(
-                    db,
-                    "websites",
-                    "humanbiomedicalsnet",
-                    "pages",
-                    "products"
-                )
-            );
+        const productDoc = await getDoc(
+            doc(db, "websites", "humanbiomedicalsnet", "pages", "products")
+        );
 
-        const products =
-            productDoc.data()
-                ?.products || [];
+        const products = productDoc.data()?.products || [];
 
-        products.forEach(
-            (product) => {
-                if (!product.slug) return;
+        products.forEach((product) => {
+            if (!product.slug) return;
 
-                // Main Product URL
+            // Main Product URL
+            urls.push({
+                url: `${baseUrl}/items/${product.slug}`,
+                lastModified: now,
+                changeFrequency: "weekly",
+                priority: 0.9,
+            });
+
+            // District-Specific Product URLs for Local SEO Indexing
+            districts.forEach((district) => {
+                if (!district.slug) return;
+
                 urls.push({
-                    url: `${baseUrl}/items/${product.slug}`,
-                    lastModified:
-                        new Date(),
+                    url: `${baseUrl}/${district.slug}/items/${product.slug}`,
+                    lastModified: now,
+                    changeFrequency: "weekly",
+                    priority: 0.85,
                 });
-
-                // District Product URLs
-                districts.forEach(
-                    (district) => {
-                        if (!district.slug) return;
-
-                        urls.push({
-                            url: `${baseUrl}/${district.slug}/items/${product.slug}`,
-                            lastModified:
-                                new Date(),
-                        });
-                    }
-                );
-            }
-        );
+            });
+        });
     } catch (error) {
-        console.error(
-            "Sitemap Error:",
-            error
-        );
+        console.error("Sitemap Generation Error:", error);
     }
 
     return urls;
