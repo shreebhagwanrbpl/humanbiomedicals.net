@@ -116,26 +116,26 @@ export default function ServicesPage() {
           <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-8 mt-16">
             {loading
               ? Array.from({ length: 6 }).map((_, index) => (
-                  <div
-                    key={index}
-                    className="bg-white rounded-[32px] p-8 border border-emerald-100 shadow-sm animate-pulse"
-                  >
-                    <div className="w-16 h-16 rounded-2xl bg-emerald-100 mb-6" />
-                    <div className="h-6 bg-slate-200 rounded-lg w-3/4 mb-4" />
-                    <div className="space-y-2">
-                      <div className="h-4 bg-slate-200 rounded-full w-full" />
-                      <div className="h-4 bg-slate-200 rounded-full w-5/6" />
-                    </div>
+                <div
+                  key={index}
+                  className="bg-white rounded-[32px] p-8 border border-emerald-100 shadow-sm animate-pulse"
+                >
+                  <div className="w-16 h-16 rounded-2xl bg-emerald-100 mb-6" />
+                  <div className="h-6 bg-slate-200 rounded-lg w-3/4 mb-4" />
+                  <div className="space-y-2">
+                    <div className="h-4 bg-slate-200 rounded-full w-full" />
+                    <div className="h-4 bg-slate-200 rounded-full w-5/6" />
                   </div>
-                ))
+                </div>
+              ))
               : services.map((service, index) => (
-                  <ServiceCard
-                    key={index}
-                    icon={service.icon || defaultIcons[index % defaultIcons.length]}
-                    title={service.title}
-                    description={service.desc || service.description}
-                  />
-                ))}
+                <ServiceCard
+                  key={index}
+                  icon={service.icon || defaultIcons[index % defaultIcons.length]}
+                  title={service.title}
+                  description={service.desc || service.description}
+                />
+              ))}
           </div>
         </div>
       </section>
