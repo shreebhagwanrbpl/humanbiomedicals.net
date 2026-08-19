@@ -1,11 +1,12 @@
 export default function robots() {
-    return {
-        rules: {
-            userAgent: "*",
-            allow: "/",
-        },
-
-        sitemap:
-            "https://humanbiomedicals.net/sitemap.xml",
-    };
+  return {
+    rules: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/api/", "/admin/", "/*?*"],
+      },
+    ],
+    sitemap: "https://humanbiomedicals.net/sitemap.xml",
+  };
 }

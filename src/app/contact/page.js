@@ -84,7 +84,7 @@ export default function ContactPage() {
         collection(
           db,
           "websitesQueries",
-          "haemoglobinstripcom",
+          "humanbiomedicalsnet",
           "contactQueries"
         ),
         {
@@ -129,7 +129,7 @@ export default function ContactPage() {
           doc(
             db,
             "websites",
-            "haemoglobinstripcom",
+            "humanbiomedicalsnet",
             "districts",
             currentDistrict
           )
