@@ -1,18 +1,15 @@
+import { formatTitleCase } from "@/lib/seo-helpers";
+
 export async function generateMetadata({ params }) {
-
   const { district = "jaipur" } = await params;
-
-  const districtName = district
-    .replace(/-/g, " ")
-    .replace(/\b\w/g, (char) => char.toUpperCase());
-
-  const url = `https://humanbiomedicals.net/${district}`;
+  const districtName = formatTitleCase(district);
 
   return {
-    title: `Biomedical & Diagnostic Equipment Supplier in ${districtName} |  Human Biomedical`,
-
-    description: ` Human Biomedical supplies diagnostic machines, laboratory equipment, reagents and biomedical products in ${districtName}.`,
-
+    title: {
+      default: `Biomedical & Diagnostic Equipment Supplier in ${districtName} | Human Biomedical`,
+      template: `%s | ${districtName} | Human Biomedical`,
+    },
+    description: `Human Biomedical supplies diagnostic machines, laboratory equipment, reagents and biomedical products in ${districtName}.`,
     keywords: [
       `Biomedical Equipment ${districtName}`,
       `Diagnostic Machines ${districtName}`,
@@ -20,20 +17,13 @@ export async function generateMetadata({ params }) {
       `Pathology Equipment ${districtName}`,
       `Biomedical Supplier ${districtName}`,
     ],
-
     robots: {
       index: true,
       follow: true,
     },
-
-    alternates: {
-      canonical: url,
-    },
-
     openGraph: {
       title: `Biomedical Equipment in ${districtName}`,
       description: `Diagnostic laboratory equipment supplier in ${districtName}.`,
-      url,
       type: "website",
     },
   };

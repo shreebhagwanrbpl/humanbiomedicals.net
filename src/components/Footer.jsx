@@ -44,7 +44,7 @@ export default function Footer() {
           doc(
             db,
             "websites",
-            "haemoglobinstripcom",
+            "humanbiomedicalsnet",
             "pages",
             "contact"
           )

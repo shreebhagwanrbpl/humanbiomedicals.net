@@ -96,7 +96,7 @@ export default function ProductDetails({ slug }) {
         const loadContact = async () => {
             try {
                 const snap = await getDoc(
-                    doc(db, "websites", "safekitin", "pages", "contact")
+                    doc(db, "websites", "humanbiomedicalsnet", "pages", "contact")
                 );
                 if (snap.exists()) {
                     const info = snap.data().contactInfo || [];
