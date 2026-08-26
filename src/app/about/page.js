@@ -21,31 +21,31 @@ export default function AboutPage() {
   const values = [
     {
       icon: <ShieldCheck className="w-8 h-8 text-emerald-600" />,
-      title: "Quality Assurance",
-      desc: "Every hematology analyzer, biochemistry system, and diagnostic instrument undergoes rigorous ISO-standard quality verification.",
+      title: "100% Tested Quality",
+      desc: "Every blood counter and testing machine is thoroughly checked before delivery so it works perfectly in your lab.",
     },
     {
       icon: <Award className="w-8 h-8 text-teal-600" />,
-      title: "Certified Excellence",
-      desc: "Authorized distribution and installation of world-class biomedical equipment with comprehensive warranty and AMC coverage.",
+      title: "Official Factory Warranty",
+      desc: "All our medical devices come with real manufacturer warranty and transparent repair agreements.",
     },
     {
       icon: <HeartHandshake className="w-8 h-8 text-emerald-600" />,
-      title: "Client-Centric Support",
-      desc: "24/7 technical consultation, prompt engineer visits, and rapid spare parts delivery for hospitals and pathology labs.",
+      title: "Fast Engineer Visit",
+      desc: "If any issue occurs, our trained technical team reaches your clinic quickly to restore your machine.",
     },
     {
       icon: <Microscope className="w-8 h-8 text-teal-600" />,
-      title: "Cutting-Edge Tech",
-      desc: "Empowering diagnostic centers across India with 3-Part & 5-Part hematology, ISE electrolytes, and automated ELISA systems.",
+      title: "Modern Testing Tools",
+      desc: "We supply easy-to-use 3-Part & 5-Part blood counters, biochemistry units, and automated testing tools.",
     },
   ];
 
   const milestones = [
-    { number: "10+", label: "Years Industry Leadership" },
-    { number: "500+", label: "Hospitals & Laboratories Served" },
-    { number: "100%", label: "Genuine Product Guarantee" },
-    { number: "50+", label: "Districts Covered Across India" },
+    { number: "10+", label: "Years Helping Hospitals" },
+    { number: "500+", label: "Pathology Labs Served" },
+    { number: "100%", label: "Real Factory Products" },
+    { number: "50+", label: "Cities & Districts Covered" },
   ];
 
   return (
@@ -53,7 +53,7 @@ export default function AboutPage() {
       {/* Banner */}
       <PageBanner
         title="About Human Biomedical"
-        subtitle="Empowering healthcare providers, pathology laboratories, and diagnostic centers with world-class biomedical equipment and technical support."
+        subtitle="Helping pathology laboratories, hospitals, and clinics with easy-to-use medical testing machines and quick repair support."
       />
 
       {/* Main Overview Section (Light Theme) */}
@@ -74,16 +74,16 @@ export default function AboutPage() {
             <div className="relative rounded-[36px] bg-white border border-emerald-100 shadow-[0_20px_60px_rgba(0,183,160,0.08)] p-8 space-y-6">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 font-semibold text-sm">
                 <Building2 size={16} className="text-emerald-600" />
-                <span>Our Corporate Vision</span>
+                <span>Our Goal & Vision</span>
               </div>
 
               <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-snug">
-                Pioneering Precision Medical Equipment & Diagnostic Solutions
+                Bringing Simple & Accurate Testing Tools To Every Lab
               </h3>
 
               <p className="text-slate-600 leading-relaxed text-base">
-                Established with a vision to revolutionize medical diagnostics,{" "}
-                <strong className="text-emerald-700 font-semibold">Human Biomedical</strong> is a trusted supplier and provider of advanced biomedical systems, hematology analyzers, biochemistry units, and pathology laboratory instruments.
+                Established with a mission to simplify healthcare testing,{" "}
+                <strong className="text-emerald-700 font-semibold">Human Biomedical</strong> is a dependable supplier of blood counters, biochemistry testing units, electrolyte analyzers, and lab supplies.
               </p>
 
               {/* Feature Highlights Grid */}
@@ -91,32 +91,32 @@ export default function AboutPage() {
                 <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-emerald-50/50 border border-emerald-100">
                   <CheckCircle2 size={20} className="text-emerald-600 mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="text-sm font-bold text-slate-900">Hospital Equipment</h4>
-                    <p className="text-xs text-slate-500 mt-0.5">ICU, OT & Diagnostic Units</p>
+                    <h4 className="text-sm font-bold text-slate-900">Hospital Devices</h4>
+                    <p className="text-xs text-slate-500 mt-0.5">ICU & Operation Theater Equipment</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-teal-50/50 border border-teal-100">
                   <CheckCircle2 size={20} className="text-teal-600 mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="text-sm font-bold text-slate-900">Pathology Labs</h4>
-                    <p className="text-xs text-slate-500 mt-0.5">Blood Cell & Biochemistry</p>
+                    <h4 className="text-sm font-bold text-slate-900">Pathology Tools</h4>
+                    <p className="text-xs text-slate-500 mt-0.5">Blood Cell & Organ Testers</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-teal-50/50 border border-teal-100">
                   <CheckCircle2 size={20} className="text-teal-600 mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="text-sm font-bold text-slate-900">Installation & AMC</h4>
-                    <p className="text-xs text-slate-500 mt-0.5">Certified Engineers</p>
+                    <h4 className="text-sm font-bold text-slate-900">Setup & Repair</h4>
+                    <p className="text-xs text-slate-500 mt-0.5">Trained Engineer Visits</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-emerald-50/50 border border-emerald-100">
                   <CheckCircle2 size={20} className="text-emerald-600 mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="text-sm font-bold text-slate-900">Pan-India Support</h4>
-                    <p className="text-xs text-slate-500 mt-0.5">Rapid On-site Service</p>
+                    <h4 className="text-sm font-bold text-slate-900">Quick Support</h4>
+                    <p className="text-xs text-slate-500 mt-0.5">Fast Response Across Districts</p>
                   </div>
                 </div>
               </div>
@@ -132,28 +132,28 @@ export default function AboutPage() {
           >
             <SectionTitle
               badge="Who We Are"
-              title="Your Trusted Partner in Medical Excellence"
-              description="We deliver high-precision diagnostic instruments and biomedical technologies tailored for modern healthcare facilities."
+              title="Your Friendly Partner For Lab Success"
+              description="We deliver easy-to-use testing instruments designed to help medical teams deliver fast and correct health reports."
             />
 
             <p className="mt-6 text-slate-600 text-base sm:text-lg leading-relaxed">
-              At <strong className="text-emerald-700">Human Biomedical</strong>, we understand that accurate diagnostics are the cornerstone of effective healthcare. Our mission is to equip pathology labs, hospitals, and diagnostic centers with reliable, high-performance analyzers supported by end-to-end technical assistance.
+              At <strong className="text-emerald-700">Human Biomedical</strong>, we know how important accurate diagnostic reports are for patient health. Our goal is to equip pathology labs, hospitals, and diagnostic centers with reliable machines backed by full technical support.
             </p>
 
             <p className="mt-4 text-slate-600 text-base leading-relaxed">
-              From semi-automated biochemistry analyzers to high-throughput 5-part differential cell counters, our catalog features verified technologies designed to minimize turnaround time and maximize analytical accuracy.
+              Whether you need a compact semi-automated biochemistry analyzer or a high-speed 5-part blood cell counter, we guide you to choose the exact machine that fits your daily workload and budget.
             </p>
 
             {/* Quick Stat Highlights */}
             <div className="grid grid-cols-2 gap-4 mt-8">
               <div className="p-4 rounded-2xl bg-white border border-emerald-100 shadow-sm">
                 <h4 className="text-2xl font-extrabold text-emerald-600">500+</h4>
-                <p className="text-xs text-slate-500 font-medium mt-1">Diagnostic Centers Partnered</p>
+                <p className="text-xs text-slate-500 font-medium mt-1">Labs & Clinics Partnered</p>
               </div>
 
               <div className="p-4 rounded-2xl bg-white border border-emerald-100 shadow-sm">
                 <h4 className="text-2xl font-extrabold text-emerald-600">24/7</h4>
-                <p className="text-xs text-slate-500 font-medium mt-1">Dedicated Service Assistance</p>
+                <p className="text-xs text-slate-500 font-medium mt-1">Helpdesk Technical Support</p>
               </div>
             </div>
           </motion.div>
@@ -164,9 +164,9 @@ export default function AboutPage() {
       <section className="py-20 bg-slate-50 border-t border-emerald-100">
         <div className="container-custom">
           <SectionTitle
-            badge="Core Principles"
-            title="Why Healthcare Leaders Choose Us"
-            description="Our commitment to quality, transparency, and rapid service drives everything we do."
+            badge="Our Work Standards"
+            title="What Makes Our Service Special"
+            description="We focus on simple communication, original products, and fast engineer visits."
             center
           />
 

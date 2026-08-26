@@ -28,33 +28,33 @@ export default function ServicesPage() {
   // Default fallback services if database record is empty or loading
   const fallbackServices = [
     {
-      title: "Diagnostic Equipment Supply",
-      desc: "Authorized distribution of 3-Part & 5-Part hematology analyzers, fully automated biochemistry systems, and ISE electrolyte analyzers.",
+      title: "Medical Equipment Supply",
+      desc: "Supply of tested 3-part & 5-part blood cell counters, biochemistry analyzers, and electrolyte testing tools.",
       icon: <Activity size={32} className="text-emerald-600" />,
     },
     {
-      title: "Installation & Calibration",
-      desc: "Turnkey equipment installation, precise parameter calibration, and control testing carried out by certified biomedical engineers.",
+      title: "Machine Installation & Tuning",
+      desc: "On-site machine setup, exact calibration of testing settings, and test report checks by certified engineers.",
       icon: <Wrench size={32} className="text-teal-600" />,
     },
     {
-      title: "AMC & Preventive Maintenance",
-      desc: "Comprehensive Annual Maintenance Contracts (AMC & CMC) ensuring regular inspection, zero downtime, and long equipment lifespan.",
+      title: "Yearly Maintenance Contracts",
+      desc: "Regular machine checkups, preventive servicing, and fast breakdown repairs to keep your lab running continuously.",
       icon: <ShieldCheck size={32} className="text-emerald-600" />,
     },
     {
-      title: "Laboratory Setup Consultation",
-      desc: "Expert guidance for hospital and pathology lab layout planning, instrument selection, and regulatory compliance assistance.",
+      title: "Lab Planning Assistance",
+      desc: "Expert advice to pick the right machines according to your daily test volume, budget, and available lab space.",
       icon: <Microscope size={32} className="text-teal-600" />,
     },
     {
-      title: "Reagents & Consumables Supply",
-      desc: "Continuous supply of high-grade diluents, lyse solutions, biochemistry reagents, and control serums for precise test results.",
+      title: "Testing Reagents & Chemicals",
+      desc: "Reliable supply of diluents, lyse solutions, biochemistry reagents, and control samples.",
       icon: <FlaskConical size={32} className="text-emerald-600" />,
     },
     {
-      title: "Technical Support & Training",
-      desc: "On-site and remote training for lab technicians, fast troubleshooting response, and 24/7 technical helpdesk.",
+      title: "Staff Training & Helpdesk",
+      desc: "Friendly training for lab technicians and quick phone/visit assistance whenever you face machine questions.",
       icon: <Stethoscope size={32} className="text-teal-600" />,
     },
   ];
@@ -95,8 +95,8 @@ export default function ServicesPage() {
     <>
       {/* Banner */}
       <PageBanner
-        title="Biomedical & Diagnostic Services"
-        subtitle="Delivering end-to-end equipment distribution, professional installation, calibration, and 24/7 maintenance for healthcare facilities across India."
+        title="Our Medical & Diagnostic Services"
+        subtitle="Complete lab solutions including machine supply, setup, technician training, and fast repair support across India."
       />
 
       {/* Services Grid (Light Theme) */}
@@ -108,8 +108,8 @@ export default function ServicesPage() {
         <div className="container-custom relative z-10">
           <SectionTitle
             badge="What We Offer"
-            title="Comprehensive Biomedical Solutions"
-            description="From initial laboratory design to continuous technical maintenance, we provide complete lifecycle support for diagnostic technologies."
+            title="Complete Support For Medical Testing Labs"
+            description="We help you select, install, and maintain all diagnostic testing instruments with zero stress."
             center
           />
 
@@ -144,9 +144,9 @@ export default function ServicesPage() {
       <section className="relative overflow-hidden py-20 bg-slate-50 border-t border-emerald-100">
         <div className="container-custom relative z-10">
           <SectionTitle
-            badge="How We Support You"
-            title="Seamless & Professional Workflow"
-            description="We ensure a hassle-free experience from equipment selection to operational deployment."
+            badge="Simple 3-Step Process"
+            title="How We Work With Your Lab"
+            description="We make getting and maintaining medical machines easy and straightforward."
             center
           />
 
@@ -155,20 +155,20 @@ export default function ServicesPage() {
               {
                 step: "01",
                 icon: <FileCheck className="w-8 h-8 text-emerald-600" />,
-                title: "Requirements & Consultation",
-                desc: "We analyze your hospital or laboratory throughput requirements, budget, and space to recommend optimal analyzer configurations.",
+                title: "Understand Your Needs",
+                desc: "We check your lab size, budget, and daily test count to recommend the best machines for your clinic.",
               },
               {
                 step: "02",
                 icon: <Truck className="w-8 h-8 text-teal-600" />,
-                title: "Supply, Setup & Calibration",
-                desc: "Safe transport with protective packaging, followed by professional installation, quality control testing, and technician training.",
+                title: "Delivery, Setup & Training",
+                desc: "Safe delivery to your clinic, complete machine installation, and easy training for your lab staff.",
               },
               {
                 step: "03",
                 icon: <ShieldCheck className="w-8 h-8 text-emerald-600" />,
-                title: "AMC & Long-Term Support",
-                desc: "Continuous technical maintenance, reagent supply guarantees, and emergency engineer assistance for uninterrupted operations.",
+                title: "Lifetime Repair & AMC",
+                desc: "Regular checkups, continuous supply of test chemicals, and quick engineer visits whenever needed.",
               },
             ].map((item, index) => (
               <div

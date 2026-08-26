@@ -239,8 +239,8 @@ export default function ContactPage() {
     <>
       {/* Banner */}
       <PageBanner
-        title="Contact Us"
-        subtitle="Get in touch with  Raj Biosis for premium diagnostic and biomedical solutions."
+        title="Contact Human Biomedical"
+        subtitle="We are here to answer your questions, provide price quotes, and arrange fast engineer support for your laboratory."
       />
 
       {/* Contact Section */}
@@ -250,18 +250,15 @@ export default function ContactPage() {
           {/* Left Info */}
           <div >
             <span className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-700 px-5 py-2 rounded-full font-semibold shadow-sm mb-6">
-              Contact Information
+              Get In Touch
             </span>
 
             <h2 className="section-title">
-              Let’s Start a Conversation
+              Talk With Our Medical Support Team
             </h2>
 
             <p className="section-subtitle">
-              Reach out to us for
-              healthcare consultation,
-              biomedical products, and
-              advanced diagnostic support.
+              Call or message us anytime for machine price details, lab setup guidance, or quick technician visits.
             </p>
 
             {/* Contact Cards */}
@@ -345,12 +342,11 @@ export default function ContactPage() {
           <div className="bg-white rounded-[40px] p-8 lg:p-10 shadow-[0_20px_60px_rgba(0,0,0,0.08)]">
 
             <h3 className="text-3xl font-bold text-slate-900">
-              Send Us Message
+              Send Us A Message
             </h3>
 
             <p className="text-slate-500 mt-3">
-              Fill out the form and our
-              team will contact you soon.
+              Fill in your contact details below and our technical expert will reach out to you shortly.
             </p>
 
             <form

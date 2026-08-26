@@ -78,20 +78,17 @@ export default function CTASection({ city }) {
             <div>
 
               <span className="inline-flex items-center bg-white/15 backdrop-blur-md border border-white/20 px-5 py-2 rounded-full text-sm font-semibold mb-6">
-                Get In Touch
+                Contact Our Team
               </span>
 
               <h2 className="text-4xl lg:text-6xl font-bold leading-tight">
-                Need Premium
+                Looking For High Quality
                 <br />
-                Biomedical Solutions?
+                Medical Machines?
               </h2>
 
               <p className="mt-6 text-white/85 text-lg leading-8 max-w-xl">
-                Discover innovative diagnostic systems,
-                laboratory equipment, and trusted biomedical
-                technologies designed to support modern
-                healthcare excellence.
+                Get testing equipment, complete lab setup assistance, and lifetime service support at prices that match your budget.
               </p>
 
             </div>
@@ -106,13 +103,11 @@ export default function CTASection({ city }) {
                 </div>
 
                 <h3 className="text-2xl font-bold text-slate-900">
-                  Let's Talk
+                  Talk To Our Team
                 </h3>
 
                 <p className="mt-3 text-slate-600 leading-7">
-                  Contact our biomedical specialists for
-                  consultation, equipment recommendations,
-                  installation, and after-sales support.
+                  Speak directly with our technical team for machine guidance, price details, and fast service bookings.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 mt-8">

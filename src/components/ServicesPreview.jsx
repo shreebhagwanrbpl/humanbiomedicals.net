@@ -15,27 +15,27 @@ export default function ServicesPreview() {
   const services = [
     {
       icon: <Microscope size={30} />,
-      title: "Diagnostic Equipment",
+      title: "Medical Machine Supply",
       description:
-        "Advanced diagnostic systems designed for accurate and efficient healthcare testing.",
+        "High-performance blood cell counters, biochemistry units, and laboratory testing machines.",
     },
     {
       icon: <FlaskConical size={30} />,
-      title: "Laboratory Solutions",
+      title: "Lab Chemical Supplies",
       description:
-        "Reliable laboratory instruments and biomedical support for modern medical environments.",
+        "Top-grade test reagents, diluents, and sample controls for everyday diagnostic testing.",
     },
     {
       icon: <ShieldCheck size={30} />,
-      title: "Maintenance Support",
+      title: "Machine Repair & AMC",
       description:
-        "Professional technical support and maintenance for biomedical systems.",
+        "Fast breakdown assistance, preventive maintenance, and yearly service plans by trained engineers.",
     },
     {
       icon: <Stethoscope size={30} />,
-      title: "Healthcare Consultation",
+      title: "Lab Setup Guidance",
       description:
-        "Expert guidance and consultation for healthcare and biomedical operations.",
+        "Helpful consultation to select the right machines according to your daily patient test count.",
     },
   ];
 
@@ -53,9 +53,9 @@ export default function ServicesPreview() {
 
         {/* Section Heading */}
         <SectionTitle
-          badge="Our Services"
-          title="Premium Diagnostic & Biomedical Services"
-          description="Providing advanced healthcare technologies, laboratory systems, and trusted biomedical solutions for hospitals, pathology labs, research centres, and healthcare institutions."
+          badge="What We Do"
+          title="Complete Services For Your Diagnostic Center"
+          description="From choosing modern testing tools to installation, supply of testing chemicals, and ongoing maintenance, we support your lab every step."
           center
         />
 

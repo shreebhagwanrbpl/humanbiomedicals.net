@@ -14,27 +14,27 @@ export default function WhyChooseUs() {
   const features = [
     {
       icon: <Microscope size={30} />,
-      title: "Advanced Technology",
+      title: "Tested & Proven Machines",
       description:
-        "Modern biomedical and diagnostic equipment for accurate healthcare solutions.",
+        "We supply modern testing instruments that work smoothly and give clear, correct results every time.",
     },
     {
       icon: <ShieldCheck size={30} />,
-      title: "Trusted Quality",
+      title: "Genuine Quality Guarantee",
       description:
-        "Reliable and certified diagnostic systems with premium quality standards.",
+        "Every machine we sell comes with real factory warranty and original manufacturer certificate.",
     },
     {
       icon: <HeartPulse size={30} />,
-      title: "Healthcare Focused",
+      title: "Fast Local Service",
       description:
-        "Delivering healthcare-driven biomedical solutions with precision and care.",
+        "Our friendly engineers reach your clinic quickly for setup, regular checkups, and fast repairs.",
     },
     {
       icon: <BadgeCheck size={30} />,
-      title: "Expert Support",
+      title: "Honest & Fair Pricing",
       description:
-        "Professional consultation and technical support for all medical needs.",
+        "Get top-grade medical tools at reasonable prices with complete guidance on what fits your budget.",
     },
   ];
 
@@ -49,9 +49,9 @@ export default function WhyChooseUs() {
 
         {/* Section Title */}
         <SectionTitle
-          badge="Why Choose Us"
-          title="Trusted Biomedical Excellence"
-          description="We deliver innovative diagnostic technologies and biomedical solutions with precision, reliability, and exceptional service support for hospitals, laboratories, and healthcare institutions."
+          badge="Why Work With Us"
+          title="Why Hospitals & Pathlabs Trust Our Team"
+          description="We take care of all your medical machine needs — from choosing the right testing tool to setup and lifetime maintenance support."
           center
         />
 

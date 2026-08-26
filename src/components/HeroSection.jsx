@@ -25,57 +25,57 @@ export default function HeroSection({ city }) {
   const [activeSlide, setActiveSlide] = useState(0);
 
   const [heroData, setHeroData] = useState({
-    title: "Advanced Biomedical & Diagnostic Solutions",
-    description: "Leading supplier of premium hematology analyzers, biochemistry systems, ELISA readers, and certified laboratory equipment across India.",
-    button1Text: "Explore Products",
-    button2Text: "Request Quote",
+    title: "Simple & Reliable Medical Equipment For Hospitals & Labs",
+    description: "We supply high-quality diagnostic machines, testing instruments, and fast repair services so your clinic can deliver fast and clear health reports every day.",
+    button1Text: "View Our Products",
+    button2Text: "Get Free Quote",
   });
 
   // Featured Product Carousel Slides (Clean, Light-Theme Interactive Cards)
   const carouselSlides = [
     {
       id: 1,
-      badge: "3-Part & 5-Part Differential",
-      title: "Hematology Analyzers",
-      category: "Pathology Diagnostics",
-      description: "High-speed automated blood cell counters delivering 60+ samples/hour with high accuracy and low sample volume requirements.",
+      badge: "Blood Cell Testing",
+      title: "Hematology Machines",
+      category: "Blood Testing",
+      description: "Fast blood cell counting machines that give complete CBC reports in less than one minute with simple touch controls.",
       icon: <Activity className="w-8 h-8 text-emerald-600" />,
       color: "from-emerald-500/10 via-teal-500/5 to-cyan-500/10",
       accent: "#00B7A0",
-      specs: ["60 Samples / Hr", "Micro Sample Volume", "Touchscreen Interface"],
+      specs: ["60 Tests Every Hour", "Tiny Sample Needed", "Easy Touch Display"],
     },
     {
       id: 2,
-      badge: "Fully & Semi Automated",
+      badge: "Chemistry & Organ Tests",
       title: "Biochemistry Analyzers",
-      category: "Clinical Chemistry",
-      description: "Precision photometers and automated clinical chemistry analyzers for liver, kidney, lipid, and cardiac biomarker assays.",
+      category: "Organ Function Tests",
+      description: "Reliable testing instruments designed to measure liver, kidney, and blood sugar levels quickly and accurately.",
       icon: <FlaskConical className="w-8 h-8 text-teal-600" />,
       color: "from-teal-500/10 via-emerald-500/5 to-emerald-500/10",
       accent: "#00A896",
-      specs: ["Dual Cuvette Mode", "Real-Time QC Graphs", "Built-in Thermal Printer"],
+      specs: ["Dual Reading Modes", "Live Test Tracking", "Built-In Ticket Printer"],
     },
     {
       id: 3,
-      badge: "Fast & Accurate",
-      title: "Electrolyte Analyzers",
-      category: "Critical Care Diagnostics",
-      description: "Ion-selective electrode (ISE) technology for Na+, K+, Cl-, Ca++ testing with maintenance-free electrode modules.",
+      badge: "Instant Salts & Minerals",
+      title: "Electrolyte Testers",
+      category: "Critical Care Testing",
+      description: "Smart sensor machines that check sodium, potassium, and calcium levels with zero hassle and low maintenance.",
       icon: <HeartPulse className="w-8 h-8 text-emerald-700" />,
       color: "from-emerald-600/10 via-cyan-500/5 to-teal-500/10",
       accent: "#028090",
-      specs: ["ISE Technology", "Auto Calibration", "Rapid 30-sec Results"],
+      specs: ["Smart Sensor Tech", "Self Calibration", "Results in 30 Seconds"],
     },
     {
       id: 4,
-      badge: "Immunoassay Systems",
+      badge: "Hormone & Immunity Care",
       title: "ELISA Readers & Washers",
-      category: "Immunology & Serology",
-      description: "Microplate readers with multi-channel optical systems for infectious disease, hormone, and tumor marker detection.",
+      category: "Immune System Testing",
+      description: "High-precision microplate readers for virus testing, hormone checks, and allergy diagnostic labs.",
       icon: <Microscope className="w-8 h-8 text-teal-700" />,
       color: "from-teal-600/10 via-emerald-500/5 to-cyan-600/10",
       accent: "#05668D",
-      specs: ["8-Channel Optical Filter", "8-Plate Memory", "Comprehensive Software"],
+      specs: ["8 Light Sensors", "Big Memory Storage", "Simple PC Software"],
     },
   ];
 
@@ -134,7 +134,7 @@ export default function HeroSection({ city }) {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-white border border-emerald-200 text-emerald-800 px-4 py-2 rounded-full text-xs sm:text-sm font-semibold mb-6 shadow-sm">
             <ShieldCheck size={18} className="text-emerald-600" />
-            <span>ISO Certified Biomedical Equipment Supplier</span>
+            <span>Trusted & Verified Medical Supplier</span>
             {city && <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full text-xs">in {city}</span>}
           </div>
 
@@ -171,7 +171,7 @@ export default function HeroSection({ city }) {
               {heroData.description}
               {city && (
                 <>
-                  {" "}Providing certified installations, warranty, and technical service across{" "}
+                  {" "}We bring quick setup, full warranty, and friendly engineer support across{" "}
                   <strong className="text-emerald-700 font-semibold">{city}</strong>.
                 </>
               )}
@@ -182,14 +182,14 @@ export default function HeroSection({ city }) {
           <div className="flex flex-col sm:flex-row gap-4 mt-8">
             <Link href={makeLink("/items")}>
               <button className="w-full sm:w-auto group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold shadow-lg shadow-emerald-500/20 transition-all duration-300 hover:-translate-y-0.5">
-                <span>{heroData.button1Text || "Explore Products"}</span>
+                <span>{heroData.button1Text || "View Our Products"}</span>
                 <ArrowRight size={18} className="transition-transform duration-300 group-hover:translate-x-1" />
               </button>
             </Link>
 
             <Link href={makeLink("/contact")}>
               <button className="w-full sm:w-auto inline-flex items-center justify-center px-7 py-3.5 rounded-2xl border-2 border-emerald-600 text-emerald-700 hover:bg-emerald-50 font-semibold transition-all duration-300">
-                {heroData.button2Text || "Request Quote"}
+                {heroData.button2Text || "Get Free Quote"}
               </button>
             </Link>
           </div>
@@ -198,15 +198,15 @@ export default function HeroSection({ city }) {
           <div className="grid grid-cols-3 gap-4 mt-12 pt-8 border-t border-emerald-100">
             <div>
               <h3 className="text-2xl sm:text-3xl font-extrabold text-emerald-600">10+</h3>
-              <p className="text-xs sm:text-sm text-slate-500 mt-0.5 font-medium">Years Experience</p>
+              <p className="text-xs sm:text-sm text-slate-500 mt-0.5 font-medium">Years Helping Labs</p>
             </div>
             <div>
               <h3 className="text-2xl sm:text-3xl font-extrabold text-emerald-600">500+</h3>
-              <p className="text-xs sm:text-sm text-slate-500 mt-0.5 font-medium">Labs & Hospitals</p>
+              <p className="text-xs sm:text-sm text-slate-500 mt-0.5 font-medium">Clinics Served</p>
             </div>
             <div>
               <h3 className="text-2xl sm:text-3xl font-extrabold text-emerald-600">100%</h3>
-              <p className="text-xs sm:text-sm text-slate-500 mt-0.5 font-medium">Quality Certified</p>
+              <p className="text-xs sm:text-sm text-slate-500 mt-0.5 font-medium">Quality Checked</p>
             </div>
           </div>
         </motion.div>

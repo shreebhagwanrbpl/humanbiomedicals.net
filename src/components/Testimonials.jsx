@@ -7,21 +7,21 @@ export default function Testimonials() {
   const reviews = [
     {
       name: "Dr. Rajesh Kumar",
-      role: "Healthcare Specialist",
+      role: "Pathology Lab Owner",
       review:
-        " Human Biomedical has consistently delivered reliable diagnostic equipment with outstanding support.",
+        "Human Biomedical set up our 5-Part hematology machine smoothly. Their service team is very responsive whenever we need support.",
     },
     {
       name: "Amit Sharma",
-      role: "Lab Director",
+      role: "Diagnostic Center Manager",
       review:
-        "Professional service, premium products, and excellent biomedical consultation experience.",
+        "Top quality biochemistry analyzer delivered at a very fair price. Machine reports are fast, accurate, and easy to print.",
     },
     {
       name: "Neha Verma",
-      role: "Research Head",
+      role: "Hospital Operations Head",
       review:
-        "Their healthcare solutions improved our laboratory efficiency significantly.",
+        "Great experience! Their engineers complete setup quickly and explain machine operations in simple language.",
     },
   ];
 
@@ -35,9 +35,9 @@ export default function Testimonials() {
       <div className="container-custom relative z-10">
 
         <SectionTitle
-          badge="Testimonials"
-          title="What Our Clients Say"
-          description="Trusted by hospitals, pathology laboratories, diagnostic centres, and healthcare professionals across India."
+          badge="Customer Reviews"
+          title="What Lab Owners Say About Us"
+          description="Read real feedback from pathology centers, clinic managers, and hospital directors who use our medical equipment."
           center
         />
 
