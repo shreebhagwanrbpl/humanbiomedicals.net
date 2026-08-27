@@ -6,6 +6,8 @@ import {
   Microscope,
   HeartPulse,
   BadgeCheck,
+  Wrench,
+  Sparkles,
 } from "lucide-react";
 
 import SectionTitle from "./SectionTitle";
@@ -14,27 +16,27 @@ export default function WhyChooseUs() {
   const features = [
     {
       icon: <Microscope size={30} />,
-      title: "Tested & Proven Machines",
+      title: "Certified Clinical Accuracy",
       description:
-        "We supply modern testing instruments that work smoothly and give clear, correct results every time.",
+        "Pre-calibrated testing systems engineered for maximum diagnostic sensitivity and repeatability.",
     },
     {
       icon: <ShieldCheck size={30} />,
-      title: "Genuine Quality Guarantee",
+      title: "Direct Factory OEM Warranty",
       description:
-        "Every machine we sell comes with real factory warranty and original manufacturer certificate.",
+        "Official manufacturer back-up, original certified spares, and transparent replacement coverage.",
     },
     {
-      icon: <HeartPulse size={30} />,
-      title: "Fast Local Service",
+      icon: <Wrench size={30} />,
+      title: "Rapid Field Service Dispatch",
       description:
-        "Our friendly engineers reach your clinic quickly for setup, regular checkups, and fast repairs.",
+        "Mobile field technicians stationed across regional districts for rapid on-site breakdown resolution.",
     },
     {
       icon: <BadgeCheck size={30} />,
-      title: "Honest & Fair Pricing",
+      title: "Transparent Commercial Pricing",
       description:
-        "Get top-grade medical tools at reasonable prices with complete guidance on what fits your budget.",
+        "Competitive equipment pricing and clear maintenance packages customized for pathology budgets.",
     },
   ];
 
@@ -49,9 +51,9 @@ export default function WhyChooseUs() {
 
         {/* Section Title */}
         <SectionTitle
-          badge="Why Work With Us"
-          title="Why Hospitals & Pathlabs Trust Our Team"
-          description="We take care of all your medical machine needs — from choosing the right testing tool to setup and lifetime maintenance support."
+          badge="Our Competitive Edge"
+          title="Why Leading Medical Centers Partner With Us"
+          description="We deliver full-spectrum biomedical reliability — from initial instrument selection to precision tuning and lifelong field engineering."
           center
         />
 
@@ -91,12 +93,12 @@ export default function WhyChooseUs() {
               </div>
 
               {/* Title */}
-              <h3 className="text-2xl font-bold text-slate-900 mb-4 group-hover:text-emerald-600 transition-colors duration-300">
+              <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-600 transition-colors duration-300">
                 {item.title}
               </h3>
 
               {/* Description */}
-              <p className="text-slate-600 leading-8">
+              <p className="text-slate-600 text-sm leading-relaxed">
                 {item.description}
               </p>
 

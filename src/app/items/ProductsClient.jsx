@@ -353,19 +353,39 @@ export default function ProductsClient({ initialProducts = [], district = null, 
         }}
       />
 
-      {/* Products */}
-      <section className="section-padding bg-white">
+      {/* Products Header & Category Highlights */}
+      <section className="section-padding bg-white pb-6">
         <div className="container-custom">
           <SectionTitle
-            badge="Featured Products"
-            title="Premium Biomedical Equipment"
-            description="Discover high-quality diagnostic and biomedical technologies tailored for laboratories, healthcare institutions, and modern diagnostics."
+            badge="Clinical Catalog Directory"
+            title="Authorized Pathology & Medical Analyzer Catalog"
+            description="Explore certified 3-part & 5-part hematology counters, clinical chemistry workstations, ion-selective electrolyte analyzers, and specialized laboratory reagents."
             center
           />
+
+          {/* Catalog Categories Quick Legend */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-10 max-w-5xl mx-auto">
+            <div className="p-5 rounded-2xl bg-emerald-50/60 border border-emerald-100/80">
+              <h4 className="font-bold text-slate-900 text-sm mb-1">Hematology Systems</h4>
+              <p className="text-xs text-slate-600 leading-relaxed">High-speed CBC counters with micro-sample aspiration & 3D flagging.</p>
+            </div>
+            <div className="p-5 rounded-2xl bg-teal-50/60 border border-teal-100/80">
+              <h4 className="font-bold text-slate-900 text-sm mb-1">Biochemistry Workstations</h4>
+              <p className="text-xs text-slate-600 leading-relaxed">Photometric analyzers for liver, kidney, cardiac & metabolic profiles.</p>
+            </div>
+            <div className="p-5 rounded-2xl bg-emerald-50/60 border border-emerald-100/80">
+              <h4 className="font-bold text-slate-900 text-sm mb-1">Electrolyte Sensors</h4>
+              <p className="text-xs text-slate-600 leading-relaxed">ISE tech for Na+, K+, Cl-, Ca++ with long-life maintenance-free electrodes.</p>
+            </div>
+            <div className="p-5 rounded-2xl bg-teal-50/60 border border-teal-100/80">
+              <h4 className="font-bold text-slate-900 text-sm mb-1">Reagents & Controls</h4>
+              <p className="text-xs text-slate-600 leading-relaxed">Cold-chain certified diluents, lysing reagents, and assayed controls.</p>
+            </div>
+          </div>
         </div>
 
         {/* Search */}
-        <div className="max-w-2xl mx-auto mt-6 lg:mt-10 px-4 lg:px-0 relative">
+        <div className="max-w-2xl mx-auto mt-8 px-4 lg:px-0 relative">
           <Search
             size={22}
             className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400"
@@ -373,10 +393,10 @@ export default function ProductsClient({ initialProducts = [], district = null, 
 
           <input
             type="text"
-            placeholder="Search products..."
+            placeholder="Search equipment model, brand, or category..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            className="w-full h-16 pl-14 pr-5 rounded-2xl border border-slate-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#A06A3B]"
+            className="w-full h-16 pl-14 pr-5 rounded-2xl border border-slate-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
           />
         </div>
 
@@ -442,7 +462,7 @@ export default function ProductsClient({ initialProducts = [], district = null, 
           <div className="space-y-16">
             {filteredProducts.length === 0 ? (
               <div className="bg-white border border-slate-200 rounded-[32px] p-10 lg:p-16 text-center shadow-lg">
-                <div className="w-24 h-24 mx-auto rounded-full bg-bg-[#F5EBDD] flex items-center justify-center text-5xl mb-6">
+                <div className="w-24 h-24 mx-auto rounded-full bg-[#F5EBDD] flex items-center justify-center text-5xl mb-6">
                   🔍
                 </div>
 
@@ -452,7 +472,7 @@ export default function ProductsClient({ initialProducts = [], district = null, 
 
                 <p className="mt-4 text-slate-500 max-w-xl mx-auto leading-7">
                   {"We couldn't find any products matching"}
-                  <span className="font-semibold text-[#8B5A2B]">
+                  <span className="font-semibold text-emerald-700">
                     {" \"" + productSearch + "\" "}
                   </span>
                   . Please try another keyword or browse categories.
@@ -463,7 +483,7 @@ export default function ProductsClient({ initialProducts = [], district = null, 
                     setSearchInput("");
                     setProductSearch("");
                   }}
-                  className="mt-8 px-8 py-3 rounded-xl bg-gradient-to-r from-[#6F4E37] to-[#A06A3B] text-white font-semibold hover:from-[#5E4230] hover:to-[#8B5A2B] transition"
+                  className="mt-8 px-8 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold hover:from-emerald-700 hover:to-teal-700 transition"
                 >
                   View All Products
                 </button>
@@ -527,13 +547,13 @@ export default function ProductsClient({ initialProducts = [], district = null, 
         </div>
       </section>
 
-      {/* Why Choose Products */}
-      <section className="section-padding bg-slate-50">
+      {/* Equipment Quality & Technical Support Standards */}
+      <section className="section-padding bg-slate-50 border-t border-emerald-100">
         <div className="container-custom">
           <SectionTitle
-            badge="Why Our Products"
-            title="Trusted Quality & Innovation"
-            description="We provide biomedical products designed for performance, reliability, and healthcare excellence."
+            badge="Technical Assurance"
+            title="Equipment Quality & Compliance Standards"
+            description="Our biomedical instruments adhere to strict clinical calibration protocols and quality assurance guidelines."
             center
           />
 
@@ -541,30 +561,35 @@ export default function ProductsClient({ initialProducts = [], district = null, 
             {[
               {
                 icon: <ShieldCheck size={30} />,
-                title: "Certified Quality",
+                title: "NABL Calibration Verified",
+                desc: "Pre-dispatch multi-level testing and optical alignment against certified clinical standards.",
               },
               {
                 icon: <Truck size={30} />,
-                title: "Fast Delivery",
+                title: "Cold-Chain Logistics",
+                desc: "Thermostatically controlled shipping for temperature-sensitive diagnostic reagents and control sets.",
               },
               {
                 icon: <BadgeCheck size={30} />,
-                title: "Trusted Support",
+                title: "OEM Warranty & Spares",
+                desc: "Original factory parts, sensors, and replacement lamps stocked locally for zero lab downtime.",
               },
               {
                 icon: <PackageCheck size={30} />,
-                title: "Premium Equipment",
+                title: "On-Site Engineer Setup",
+                desc: "Complete physical installation, waste line routing, power stabilization, and staff training.",
               },
             ].map((item, index) => (
               <div
                 key={index}
-                className="bg-white rounded-[30px] border border-slate-100 card-shadow text-center p-8"
+                className="bg-white rounded-[30px] border border-emerald-100 shadow-sm hover:shadow-md transition text-center p-8"
               >
-                <div className="w-16 h-16 mx-auto rounded-[22px] bg-bg-[#F5EBDD] text-[#8B5A2B] flex items-center justify-center mb-6">
+                <div className="w-16 h-16 mx-auto rounded-[22px] bg-emerald-50 text-emerald-600 flex items-center justify-center mb-6">
                   {item.icon}
                 </div>
 
-                <h3 className="text-xl font-semibold">{item.title}</h3>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">{item.title}</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>

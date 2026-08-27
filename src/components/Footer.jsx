@@ -120,20 +120,25 @@ export default function Footer() {
     return found ? found.value : "";
   };
 
+  const defaultPhones = ["+91 9983123469", "+91 9983333489"];
+  const defaultEmail = "rajbiosis@yahoo.in";
+  const defaultAddress = "F-4, 1st Floor, Plot No. 16, D-Block Tagore Nagar, 200 Feet Bypass Rd, Jaipur, Rajasthan 302021, India";
+
   const phone = getContactField(["phone", "phone number", "mobile", "mobile number"]);
-  const email = getContactField(["email", "email address"]);
-  const address = getContactField(["address", "office address", "address/office address"]);
+  const email = getContactField(["email", "email address"]) || defaultEmail;
+  const address = getContactField(["address", "office address", "address/office address"]) || defaultAddress;
 
   const dynamicAddress =
     districtData
       ? `${districtData.district}, ${districtData.state}, India`
       : address;
 
-  let phoneValues = [];
-  if (Array.isArray(phone)) {
+  let phoneValues = defaultPhones;
+  if (Array.isArray(phone) && phone.length > 0) {
     phoneValues = phone.map(p => String(p).trim());
   } else if (phone !== null && phone !== undefined && phone !== "") {
-    phoneValues = String(phone).split(/[\n,]+/).map(p => p.trim());
+    const parsed = String(phone).split(/[\n,]+/).map(p => p.trim()).filter(Boolean);
+    if (parsed.length > 0) phoneValues = parsed;
   }
 
   const makeLink = (path) => {

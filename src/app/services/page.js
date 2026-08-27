@@ -8,10 +8,11 @@ import {
   Stethoscope,
   Wrench,
   Activity,
-  HeartPulse,
   Truck,
   FileCheck,
-  CheckCircle2,
+  Settings2,
+  Boxes,
+  Award,
 } from "lucide-react";
 
 import PageBanner from "@/components/PageBanner";
@@ -25,47 +26,47 @@ export default function ServicesPage() {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Default fallback services if database record is empty or loading
+  // High-precision technical fallback services
   const fallbackServices = [
     {
-      title: "Medical Equipment Supply",
-      desc: "Supply of tested 3-part & 5-part blood cell counters, biochemistry analyzers, and electrolyte testing tools.",
+      title: "Diagnostic Equipment Procurement & Setup",
+      desc: "Strategic sourcing, delivery, and benchtop positioning of 3-part & 5-part CBC blood cell counters, biochemistry systems, and ISE salt analyzers.",
       icon: <Activity size={32} className="text-emerald-600" />,
     },
     {
-      title: "Machine Installation & Tuning",
-      desc: "On-site machine setup, exact calibration of testing settings, and test report checks by certified engineers.",
-      icon: <Wrench size={32} className="text-teal-600" />,
+      title: "Precision Calibration & Quality Assurance",
+      desc: "Optical sensor alignment, multi-point calibration using certified control standards, and NABL documentation readiness.",
+      icon: <Settings2 size={32} className="text-teal-600" />,
     },
     {
-      title: "Yearly Maintenance Contracts",
-      desc: "Regular machine checkups, preventive servicing, and fast breakdown repairs to keep your lab running continuously.",
+      title: "Preventive & Annual Maintenance Contracts (AMC/PMC)",
+      desc: "Scheduled preventive servicing, tube & sensor cleaning, optical lamp replacement, and emergency field engineer visit coverage.",
       icon: <ShieldCheck size={32} className="text-emerald-600" />,
     },
     {
-      title: "Lab Planning Assistance",
-      desc: "Expert advice to pick the right machines according to your daily test volume, budget, and available lab space.",
+      title: "Pathology & Hospital Laboratory Layout Assistance",
+      desc: "Custom technical advising on spatial positioning, electrical grounding, waste line setup, and backup power planning for new labs.",
       icon: <Microscope size={32} className="text-teal-600" />,
     },
     {
-      title: "Testing Reagents & Chemicals",
-      desc: "Reliable supply of diluents, lyse solutions, biochemistry reagents, and control samples.",
+      title: "Cold-Chain Reagent & Consumables Supply",
+      desc: "Guaranteed supply of diluents, lyse agents, washing solutions, calibrators, and control reagents with temperature-controlled logistics.",
       icon: <FlaskConical size={32} className="text-emerald-600" />,
     },
     {
-      title: "Staff Training & Helpdesk",
-      desc: "Friendly training for lab technicians and quick phone/visit assistance whenever you face machine questions.",
+      title: "Technical Staff Training & Helpline Support",
+      desc: "On-site practical training for pathology technicians on sample handling, daily QC runs, software operations, and error troubleshooting.",
       icon: <Stethoscope size={32} className="text-teal-600" />,
     },
   ];
 
   const defaultIcons = [
     <Activity size={32} className="text-emerald-600" />,
-    <FlaskConical size={32} className="text-teal-600" />,
+    <Settings2 size={32} className="text-teal-600" />,
     <ShieldCheck size={32} className="text-emerald-600" />,
-    <Stethoscope size={32} className="text-teal-600" />,
-    <Wrench size={32} className="text-emerald-600" />,
     <Microscope size={32} className="text-teal-600" />,
+    <FlaskConical size={32} className="text-emerald-600" />,
+    <Stethoscope size={32} className="text-teal-600" />,
   ];
 
   useEffect(() => {
@@ -95,8 +96,8 @@ export default function ServicesPage() {
     <>
       {/* Banner */}
       <PageBanner
-        title="Our Medical & Diagnostic Services"
-        subtitle="Complete lab solutions including machine supply, setup, technician training, and fast repair support across India."
+        title="Biomedical Engineering & Laboratory Services"
+        subtitle="End-to-end technical support including diagnostic machine supply, precise calibration, technician training, and 24/7 breakdown assistance."
       />
 
       {/* Services Grid (Light Theme) */}
@@ -107,9 +108,9 @@ export default function ServicesPage() {
 
         <div className="container-custom relative z-10">
           <SectionTitle
-            badge="What We Offer"
-            title="Complete Support For Medical Testing Labs"
-            description="We help you select, install, and maintain all diagnostic testing instruments with zero stress."
+            badge="Engineering Solutions"
+            title="Comprehensive Technical Care For Diagnostic Laboratories"
+            description="We support clinical laboratories, hospital ICUs, and pathology centers with calibrated medical equipment, OEM reagents, and expert field engineers."
             center
           />
 
@@ -140,35 +141,41 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* Structured 3-Step Work Process */}
+      {/* Structured 4-Stage Technical Workflow */}
       <section className="relative overflow-hidden py-20 bg-slate-50 border-t border-emerald-100">
         <div className="container-custom relative z-10">
           <SectionTitle
-            badge="Simple 3-Step Process"
-            title="How We Work With Your Lab"
-            description="We make getting and maintaining medical machines easy and straightforward."
+            badge="Engineering Support Protocol"
+            title="Our 4-Stage Equipment Implementation Workflow"
+            description="From initial clinical consultation to lifetime annual maintenance contracts, we guarantee zero downtime for your medical laboratory."
             center
           />
 
-          <div className="grid lg:grid-cols-3 gap-8 mt-16">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
             {[
               {
                 step: "01",
                 icon: <FileCheck className="w-8 h-8 text-emerald-600" />,
-                title: "Understand Your Needs",
-                desc: "We check your lab size, budget, and daily test count to recommend the best machines for your clinic.",
+                title: "Needs & Throughput Audit",
+                desc: "We evaluate your daily test volumes, space constraints, and clinical requirements to recommend optimal analyzer capacity.",
               },
               {
                 step: "02",
                 icon: <Truck className="w-8 h-8 text-teal-600" />,
-                title: "Delivery, Setup & Training",
-                desc: "Safe delivery to your clinic, complete machine installation, and easy training for your lab staff.",
+                title: "Setup & Calibration",
+                desc: "Certified technicians install the unit, establish drain/waste lines, configure liquid reagents, and perform multi-point calibration.",
               },
               {
                 step: "03",
-                icon: <ShieldCheck className="w-8 h-8 text-emerald-600" />,
-                title: "Lifetime Repair & AMC",
-                desc: "Regular checkups, continuous supply of test chemicals, and quick engineer visits whenever needed.",
+                icon: <Award className="w-8 h-8 text-emerald-600" />,
+                title: "Staff Protocol Training",
+                desc: "Hands-on operator training covering daily start-up cycles, sample loading, software QC tracking, and routine cleaning maintenance.",
+              },
+              {
+                step: "04",
+                icon: <ShieldCheck className="w-8 h-8 text-teal-600" />,
+                title: "Lifetime PMC & Emergency Visit",
+                desc: "Scheduled preventive maintenance visits, cold-chain reagent restocks, and rapid 2-4 hour emergency breakdown engineering visits.",
               },
             ].map((item, index) => (
               <div
@@ -184,11 +191,11 @@ export default function ServicesPage() {
                   </span>
                 </div>
 
-                <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-600 transition-colors">
+                <h3 className="text-lg font-bold text-slate-900 mb-3 group-hover:text-emerald-600 transition-colors">
                   {item.title}
                 </h3>
 
-                <p className="text-slate-600 text-sm leading-relaxed">
+                <p className="text-slate-600 text-xs leading-relaxed">
                   {item.desc}
                 </p>
               </div>
