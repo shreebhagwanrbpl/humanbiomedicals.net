@@ -23,7 +23,7 @@ const ProductLink = memo(function ProductLink({ item, category, scrollToProduct 
   return (
     <button
       onClick={() => scrollToProduct(item.slug, category)}
-      className="block w-full text-left py-1 text-sm text-slate-500 hover:text-[#8B5A2B] hover:translate-x-1 transition-all duration-200 font-medium"
+      className="block w-full text-left py-1 text-sm text-slate-500 hover:text-[#00B7A0] hover:translate-x-1 transition-all duration-200 font-medium"
     >
       • {item.title}
     </button>
@@ -44,15 +44,15 @@ const SubCategoryItem = memo(function SubCategoryItem({
       {/* Subcategory Header */}
       <button
         onClick={() => toggleSubCategory(category, subCategory)}
-        className="w-full text-left py-1.5 flex justify-between items-center text-xs font-bold text-[#8B5A2B] hover:text-[#A06A3B] transition-colors uppercase tracking-wider border-b border-slate-100 pb-1"
+        className="w-full text-left py-1.5 flex justify-between items-center text-xs font-bold text-[#00B7A0] hover:text-[#009688] transition-colors uppercase tracking-wider border-b border-slate-100 pb-1"
       >
         <span className="flex items-center gap-1.5">
           <span className={`transition-transform duration-200 ${isSubOpened ? "rotate-90" : ""}`}>
-            <ChevronRight size={12} className="text-[#8B5A2B]" />
+            <ChevronRight size={12} className="text-[#00B7A0]" />
           </span>
           {subCategory}
         </span>
-        <span className="text-[10px] font-semibold bg-bg-[#F5EBDD] text-[#8B5A2B] px-1.5 py-0.5 rounded-full">
+        <span className="text-[10px] font-semibold bg-[#e6f8f5] text-[#00B7A0] px-1.5 py-0.5 rounded-full">
           {subList.length}
         </span>
       </button>
@@ -98,17 +98,17 @@ const CategoryItem = memo(function CategoryItem({
       <button
         onClick={() => toggleCategory(category)}
         className={`sticky top-[116px] z-10 w-full px-4 py-3 flex justify-between items-center rounded-2xl transition-all duration-200 text-left ${isActive
-          ? "bg-bg-[#F5EBDD] text-[#8B5A2B] font-bold"
-          : "bg-white text-slate-700 hover:bg-slate-50 hover:text-[#8B5A2B]"
+          ? "bg-[#e6f8f5] text-[#00B7A0] font-bold"
+          : "bg-white text-slate-700 hover:bg-slate-50 hover:text-[#00B7A0]"
           }`}
       >
         <span className="flex items-center gap-3 text-sm font-semibold leading-none">
           <span className={`transition-transform duration-200 ${isOpened ? "rotate-90" : ""}`}>
-            <ChevronRight size={16} className={isActive ? "text-[#8B5A2B]" : "text-slate-400 group-hover:text-[#8B5A2B]"} />
+            <ChevronRight size={16} className={isActive ? "text-[#00B7A0]" : "text-slate-400 group-hover:text-[#00B7A0]"} />
           </span>
           {category}
         </span>
-        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${isActive ? "bg-bg-[#F5EBDD] text-[#A06A3B]" : "bg-slate-100 text-slate-500"
+        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${isActive ? "bg-[#e6f8f5] text-[#009688]" : "bg-slate-100 text-slate-500"
           }`}>
           {categoryProductCount}
         </span>
@@ -147,6 +147,7 @@ const CategoryItem = memo(function CategoryItem({
 });
 
 export default function ProductsClient({ initialProducts = [], district = null, city = null }) {
+  const [products, setProducts] = useState(initialProducts);
   const [categorySearch, setCategorySearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [productSearch, setProductSearch] = useState("");
@@ -155,6 +156,59 @@ export default function ProductsClient({ initialProducts = [], district = null, 
   const [openedSubCategories, setOpenedSubCategories] = useState({});
   const [pendingScroll, setPendingScroll] = useState(null);
   const [showTopButton, setShowTopButton] = useState(false);
+
+  // Sync initialProducts if SSR prop updates
+  useEffect(() => {
+    if (Array.isArray(initialProducts) && initialProducts.length > 0) {
+      setProducts(initialProducts);
+    }
+  }, [initialProducts]);
+
+  // Real-time catalog synchronization function
+  const syncLiveCatalog = useCallback(async () => {
+    try {
+      const res = await fetch("/api/catalog", {
+        cache: "no-store",
+        headers: { "Pragma": "no-cache" },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data.products)) {
+          setProducts(data.products);
+        }
+      }
+    } catch (err) {
+      console.error("[ProductsClient] Live sync error:", err);
+    }
+  }, []);
+
+  // Instant sync on tab switch (window focus / visibility change) + background polling
+  useEffect(() => {
+    // Initial client fetch
+    syncLiveCatalog();
+
+    const handleFocus = () => {
+      syncLiveCatalog();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        syncLiveCatalog();
+      }
+    };
+
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // Periodic sync every 4 seconds
+    const interval = setInterval(syncLiveCatalog, 4000);
+
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      clearInterval(interval);
+    };
+  }, [syncLiveCatalog]);
 
   // Debounce search term updates to make search typing instant
   useEffect(() => {
@@ -169,7 +223,7 @@ export default function ProductsClient({ initialProducts = [], district = null, 
     const start = performance.now();
     const query = productSearch.trim().toLowerCase();
     const filtered = query
-      ? initialProducts.filter((item) => {
+      ? products.filter((item) => {
         const title = (item.title || "").toLowerCase();
         const brand = (item.brand || "").toLowerCase();
         const model = (item.model || "").toLowerCase();
@@ -184,7 +238,7 @@ export default function ProductsClient({ initialProducts = [], district = null, 
           subCategory.includes(query)
         );
       })
-      : initialProducts;
+      : products;
 
     const grouped = {};
     const counts = {};
@@ -231,7 +285,7 @@ export default function ProductsClient({ initialProducts = [], district = null, 
       sortedGroupedProducts: sortedObj,
       categoryCounts: counts,
     };
-  }, [initialProducts, productSearch]);
+  }, [products, productSearch]);
 
   const getCategoryProductCount = useCallback((categoryName) => {
     return categoryCounts[categoryName] || 0;
@@ -255,7 +309,7 @@ export default function ProductsClient({ initialProducts = [], district = null, 
     setPendingScroll(slug);
 
     // Auto-expand the target subcategory when scrolling to its product
-    const prod = initialProducts.find((p) => p.slug === slug);
+    const prod = products.find((p) => p.slug === slug);
     if (prod && prod.subCategory) {
       const subKey = `${category}-${prod.subCategory}`;
       setOpenedSubCategories((prev) => ({
@@ -263,7 +317,7 @@ export default function ProductsClient({ initialProducts = [], district = null, 
         [subKey]: true,
       }));
     }
-  }, [initialProducts]);
+  }, [products]);
 
   // Scroll to selected sidebar item when category expansion finishes
   useEffect(() => {
@@ -424,7 +478,7 @@ export default function ProductsClient({ initialProducts = [], district = null, 
                   placeholder="Search categories..."
                   value={categorySearch}
                   onChange={(e) => setCategorySearch(e.target.value)}
-                  className="w-full h-10 pl-10 pr-4 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#A06A3B] focus:bg-white transition-all"
+                  className="w-full h-10 pl-10 pr-4 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#009688] focus:bg-white transition-all"
                 />
               </div>
             </div>
@@ -462,7 +516,7 @@ export default function ProductsClient({ initialProducts = [], district = null, 
           <div className="space-y-16">
             {filteredProducts.length === 0 ? (
               <div className="bg-white border border-slate-200 rounded-[32px] p-10 lg:p-16 text-center shadow-lg">
-                <div className="w-24 h-24 mx-auto rounded-full bg-[#F5EBDD] flex items-center justify-center text-5xl mb-6">
+                <div className="w-24 h-24 mx-auto rounded-full bg-[#e6f8f5] flex items-center justify-center text-5xl mb-6">
                   🔍
                 </div>
 
@@ -603,7 +657,7 @@ export default function ProductsClient({ initialProducts = [], district = null, 
       {showTopButton && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-50 w-14 h-14 rounded-full text-white bg-gradient-to-r from-[#6F4E37] to-[#A06A3B] hover:from-[#5E4230] hover:to-[#8B5A2B] shadow-2xl hover:scale-110 transition flex items-center justify-center"
+          className="fixed bottom-8 right-8 z-50 w-14 h-14 rounded-full text-white bg-gradient-to-r from-[#00B7A0] to-[#009688] hover:from-[#008f7d] hover:to-[#00B7A0] shadow-2xl hover:scale-110 transition flex items-center justify-center"
         >
           <ChevronUp size={24} />
         </button>

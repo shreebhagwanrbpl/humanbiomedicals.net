@@ -2,7 +2,8 @@ import { fetchFullCatalog } from "@/lib/data-fetcher-server";
 import ProductsClient from "./ProductsClient";
 import { getCanonicalUrl } from "@/lib/seo-helpers";
 
-export const revalidate = 3600; // Revalidate cache every hour
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function generateMetadata() {
   const canonicalUrl = getCanonicalUrl("/items");

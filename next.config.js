@@ -11,10 +11,14 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "firebasestorage.googleapis.com",
+        hostname: "**",
+      },
+      {
+        protocol: "http",
+        hostname: "**",
       },
     ],
   },
 };
 
-export default nextConfig;
+export default nextConfig;

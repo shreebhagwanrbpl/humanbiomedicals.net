@@ -65,6 +65,15 @@ export const metadata = {
     images: ["/logo.png"],
   },
 
+  icons: {
+    icon: [
+      { url: "/icon.png", sizes: "any" },
+      { url: "/logo.png", sizes: "any" },
+    ],
+    shortcut: "/icon.png",
+    apple: "/logo.png",
+  },
+
   alternates: {
     canonical: "https://humanbiomedicals.net",
   },
