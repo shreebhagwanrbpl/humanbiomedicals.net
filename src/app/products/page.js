@@ -1,6 +1,9 @@
 import ProductsPage from "@/app/items/page";
 import { getCanonicalUrl } from "@/lib/seo-helpers";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function generateMetadata() {
   const canonicalUrl = getCanonicalUrl("/items");
   return {

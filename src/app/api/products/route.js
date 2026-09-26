@@ -1,4 +1,4 @@
-import { fetchFullCatalog } from "@/lib/data-fetcher";
+import { fetchFullCatalog, WEBSITE_ID, ADMIN_API_BASE_URL } from "@/lib/admin-api";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -11,7 +11,8 @@ export async function GET(request) {
     return NextResponse.json(
       {
         success: true,
-        websiteId: "humanbiomedicalsnet",
+        websiteId: WEBSITE_ID,
+        adminApiBaseUrl: ADMIN_API_BASE_URL,
         count: products.length,
         products,
       },

@@ -6,12 +6,10 @@ import {
   FlaskConical,
   ShieldCheck,
   Stethoscope,
-  Wrench,
   Activity,
   Truck,
   FileCheck,
   Settings2,
-  Boxes,
   Award,
 } from "lucide-react";
 
@@ -19,71 +17,39 @@ import PageBanner from "@/components/PageBanner";
 import SectionTitle from "@/components/SectionTitle";
 import ServiceCard from "@/components/ServiceCard";
 import CTASection from "@/components/CTASection";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 
 export default function ServicesPage() {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // High-precision technical fallback services
-  const fallbackServices = [
-    {
-      title: "Diagnostic Equipment Procurement & Setup",
-      desc: "Strategic sourcing, delivery, and benchtop positioning of 3-part & 5-part CBC blood cell counters, biochemistry systems, and ISE salt analyzers.",
-      icon: <Activity size={32} className="text-emerald-600" />,
-    },
-    {
-      title: "Precision Calibration & Quality Assurance",
-      desc: "Optical sensor alignment, multi-point calibration using certified control standards, and NABL documentation readiness.",
-      icon: <Settings2 size={32} className="text-teal-600" />,
-    },
-    {
-      title: "Preventive & Annual Maintenance Contracts (AMC/PMC)",
-      desc: "Scheduled preventive servicing, tube & sensor cleaning, optical lamp replacement, and emergency field engineer visit coverage.",
-      icon: <ShieldCheck size={32} className="text-emerald-600" />,
-    },
-    {
-      title: "Pathology & Hospital Laboratory Layout Assistance",
-      desc: "Custom technical advising on spatial positioning, electrical grounding, waste line setup, and backup power planning for new labs.",
-      icon: <Microscope size={32} className="text-teal-600" />,
-    },
-    {
-      title: "Cold-Chain Reagent & Consumables Supply",
-      desc: "Guaranteed supply of diluents, lyse agents, washing solutions, calibrators, and control reagents with temperature-controlled logistics.",
-      icon: <FlaskConical size={32} className="text-emerald-600" />,
-    },
-    {
-      title: "Technical Staff Training & Helpline Support",
-      desc: "On-site practical training for pathology technicians on sample handling, daily QC runs, software operations, and error troubleshooting.",
-      icon: <Stethoscope size={32} className="text-teal-600" />,
-    },
-  ];
-
   const defaultIcons = [
-    <Activity size={32} className="text-emerald-600" />,
-    <Settings2 size={32} className="text-teal-600" />,
-    <ShieldCheck size={32} className="text-emerald-600" />,
-    <Microscope size={32} className="text-teal-600" />,
-    <FlaskConical size={32} className="text-emerald-600" />,
-    <Stethoscope size={32} className="text-teal-600" />,
+    <Activity key="1" size={32} className="text-emerald-600" />,
+    <Settings2 key="2" size={32} className="text-teal-600" />,
+    <ShieldCheck key="3" size={32} className="text-emerald-600" />,
+    <Microscope key="4" size={32} className="text-teal-600" />,
+    <FlaskConical key="5" size={32} className="text-emerald-600" />,
+    <Stethoscope key="6" size={32} className="text-teal-600" />,
   ];
 
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const snap = await getDoc(
-          doc(db, "websites", "humanbiomedicalsnet", "pages", "services")
-        );
-
-        if (snap.exists() && snap.data().services?.length > 0) {
-          setServices(snap.data().services);
+        const res = await fetch("/api/site-data?type=services");
+        if (res.ok) {
+          const json = await res.json();
+          if (json.data && Array.isArray(json.data.services)) {
+            setServices(json.data.services);
+          } else if (Array.isArray(json.data)) {
+            setServices(json.data);
+          } else {
+            setServices([]);
+          }
         } else {
-          setServices(fallbackServices);
+          setServices([]);
         }
       } catch (error) {
         console.error("Error fetching services:", error);
-        setServices(fallbackServices);
+        setServices([]);
       } finally {
         setLoading(false);
       }
@@ -115,8 +81,8 @@ export default function ServicesPage() {
           />
 
           <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-8 mt-16">
-            {loading
-              ? Array.from({ length: 6 }).map((_, index) => (
+            {loading ? (
+              Array.from({ length: 6 }).map((_, index) => (
                 <div
                   key={index}
                   className="bg-white rounded-[32px] p-8 border border-emerald-100 shadow-sm animate-pulse"
@@ -129,14 +95,21 @@ export default function ServicesPage() {
                   </div>
                 </div>
               ))
-              : services.map((service, index) => (
+            ) : services.length > 0 ? (
+              services.map((service, index) => (
                 <ServiceCard
                   key={index}
                   icon={service.icon || defaultIcons[index % defaultIcons.length]}
                   title={service.title}
                   description={service.desc || service.description}
                 />
-              ))}
+              ))
+            ) : (
+              <div className="col-span-full py-12 text-center text-slate-500 bg-white rounded-3xl border border-emerald-100">
+                <p className="text-base font-semibold">Services list updating from admin...</p>
+                <p className="text-xs text-slate-400 mt-1">Please contact our support desk for comprehensive service catalog details.</p>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -175,7 +148,7 @@ export default function ServicesPage() {
                 step: "04",
                 icon: <ShieldCheck className="w-8 h-8 text-teal-600" />,
                 title: "Lifetime PMC & Emergency Visit",
-                desc: "Scheduled preventive maintenance visits, cold-chain reagent restocks, and rapid 2-4 hour emergency breakdown engineering visits.",
+                desc: "Scheduled preventive maintenance visits, cold-chain reagent restocks, and rapid emergency breakdown engineering visits.",
               },
             ].map((item, index) => (
               <div

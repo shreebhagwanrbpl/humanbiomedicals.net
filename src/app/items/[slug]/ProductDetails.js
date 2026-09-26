@@ -12,13 +12,6 @@ import {
     FaInstagram,
     FaLink,
 } from "react-icons/fa";
-import {
-    doc,
-    getDoc,
-    addDoc,
-    collection,
-} from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import { fetchFullCatalog } from "@/lib/data-fetcher";
 import { Download } from "lucide-react";
 
@@ -43,15 +36,15 @@ export default function ProductDetails({ slug, initialProduct = null }) {
     const [downloading, setDownloading] = useState(false);
     const [brochureImage, setBrochureImage] = useState("");
     const [contactData, setContactData] = useState({
-        phone: "+91 9983123469\n+91 9983333489",
-        email: "rajbiosis@yahoo.in",
-        address: "F-4, 1st Floor, Plot No. 16, D-Block Tagore Nagar, 200 Feet Bypass Rd, Jaipur, Rajasthan 302021"
+        phone: "",
+        email: "",
+        address: ""
     });
 
     const pathname = usePathname();
     const pathParts = pathname.split("/").filter(Boolean);
     const city =
-        pathParts.length > 1 && !["about", "services", "items", "contact"].includes(pathParts[0])
+        pathParts.length > 1 && !["about", "services", "items", "contact", "products"].includes(pathParts[0])
             ? pathParts[0]
             : "India";
 
@@ -93,19 +86,20 @@ export default function ProductDetails({ slug, initialProduct = null }) {
 
         const loadContact = async () => {
             try {
-                const snap = await getDoc(
-                    doc(db, "websites", "humanbiomedicalsnet", "pages", "contact")
-                );
-                if (snap.exists()) {
-                    const info = snap.data().contactInfo || [];
-                    const phoneVal = info.find(x => x.label === "Phone Number")?.value || "";
-                    const emailVal = info.find(x => x.label === "Email Address")?.value || "";
-                    const addressVal = info.find(x => x.label === "Office Address")?.value || "";
-                    setContactData({
-                        phone: phoneVal || "+91 9983123469\n+91 9983333489",
-                        email: emailVal || "rajbiosis@yahoo.in",
-                        address: addressVal || "F-4, 1st Floor, Plot No. 16, D-Block Tagore Nagar, 200 Feet Bypass Rd, Jaipur, Rajasthan 302021"
-                    });
+                const res = await fetch("/api/site-data?type=contact");
+                if (res.ok) {
+                    const json = await res.json();
+                    if (json.data?.contactInfo) {
+                        const info = json.data.contactInfo || [];
+                        const phoneVal = info.find(x => x.label?.toLowerCase().includes("phone") || x.label?.toLowerCase().includes("mobile"))?.value || "";
+                        const emailVal = info.find(x => x.label?.toLowerCase().includes("email"))?.value || "";
+                        const addressVal = info.find(x => x.label?.toLowerCase().includes("address"))?.value || "";
+                        setContactData({
+                            phone: phoneVal,
+                            email: emailVal,
+                            address: addressVal
+                        });
+                    }
                 }
             } catch (err) {
                 console.error("Error loading contact details:", err);
@@ -211,22 +205,25 @@ export default function ProductDetails({ slug, initialProduct = null }) {
         try {
             setSubmitting(true);
 
-            await addDoc(
-                collection(
-                    db,
-                    "websitesQueries",
-                    "humanbiomedicalsnet",
-                    "productQueries"
-                ),
-                {
+            const res = await fetch("/api/product-query", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
                     ...form,
-                    productName: product.title,
-                    productSlug: product.slug,
-                    brand: product.brand || "",
-                    model: product.model || "",
-                    createdAt: new Date(),
-                }
-            );
+                    productName: product?.title || "",
+                    productSlug: product?.slug || slug || "",
+                    brand: product?.brand || "",
+                    model: product?.model || "",
+                }),
+            });
+
+            const result = await res.json();
+
+            if (!res.ok || !result.success) {
+                throw new Error(result.error || "Failed to submit enquiry");
+            }
 
             toast.success("Your enquiry has been submitted successfully.");
             setForm({
@@ -236,7 +233,7 @@ export default function ProductDetails({ slug, initialProduct = null }) {
             });
         } catch (error) {
             console.error(error);
-            toast.error("Something went wrong");
+            toast.error(error.message || "Something went wrong");
         } finally {
             setSubmitting(false);
         }
@@ -304,7 +301,7 @@ export default function ProductDetails({ slug, initialProduct = null }) {
 
     const handleInstagram = async () => {
         await navigator.clipboard.writeText(window.location.href);
-        toast.success("Instagram direct sharing available nahi hai. Link copied.");
+        toast.success("Link copied to clipboard.");
     };
 
     const handleNativeShare = async () => {
@@ -397,7 +394,7 @@ export default function ProductDetails({ slug, initialProduct = null }) {
                         </div>
 
                         <div className="flex flex-wrap gap-3 mt-5">
-                            {(product.images?.length ? product.images : [product.image]).map((img, index) => (
+                            {(product.images?.length ? product.images : [product.image].filter(Boolean)).map((img, index) => (
                                 <button
                                     key={index}
                                     onClick={() => {
@@ -451,7 +448,7 @@ export default function ProductDetails({ slug, initialProduct = null }) {
                         </div>
                     </div>
 
-                    {/* Product Details (Only Place for Specifications) */}
+                    {/* Product Details */}
                     <div>
                         <div className="flex justify-between items-start gap-4 relative">
                             {/* Product Title */}
@@ -595,7 +592,7 @@ export default function ProductDetails({ slug, initialProduct = null }) {
                             </form>
                         </div>
 
-                        {/* Description Section (Duplicate Table Removed) */}
+                        {/* Description Section */}
                         <div className="bg-white rounded-[24px] md:rounded-[32px] p-5 sm:p-6 md:p-10 border border-[#00B7A0] shadow-sm">
                             <h3 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-[#0f172a]">
                                 Product Description
@@ -845,12 +842,14 @@ export default function ProductDetails({ slug, initialProduct = null }) {
                     </div>
                     <div style={{ textAlign: "right", fontSize: "12px", lineHeight: "1.6", color: "#475569" }}>
                         <p style={{ margin: "0", fontWeight: "700", color: "#00B7A0", fontSize: "14px" }}>www.humanbiomedicals.net</p>
-                        <p style={{ margin: "0" }}>Email: {contactData.email}</p>
-                        <div style={{ margin: "0" }}>
-                            {contactData.phone.split(/[\n,]+/).map((num, i) => (
-                                <span key={i} style={{ display: "block" }}>Mob: {num.trim()}</span>
-                            ))}
-                        </div>
+                        {contactData.email && <p style={{ margin: "0" }}>Email: {contactData.email}</p>}
+                        {contactData.phone && (
+                            <div style={{ margin: "0" }}>
+                                {contactData.phone.split(/[\n,]+/).map((num, i) => (
+                                    <span key={i} style={{ display: "block" }}>Mob: {num.trim()}</span>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -952,7 +951,7 @@ export default function ProductDetails({ slug, initialProduct = null }) {
                     color: "#64748b",
                     lineHeight: "1.5"
                 }}>
-                    <p style={{ margin: "0", fontWeight: "600" }}>Office Address: {contactData.address}</p>
+                    {contactData.address && <p style={{ margin: "0", fontWeight: "600" }}>Office Address: {contactData.address}</p>}
                     <p style={{ margin: "5px 0 0 0" }}>© 2026 Human Biomedicals. All rights reserved. Premium diagnostics and biomedical solutions.</p>
                 </div>
             </div>

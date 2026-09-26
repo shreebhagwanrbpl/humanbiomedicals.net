@@ -1,7 +1,9 @@
 import { fetchFullCatalog } from "@/lib/data-fetcher-server";
+import { fetchDistricts } from "@/lib/admin-api";
 import { isEligibleForSitemap } from "@/lib/seo-quality";
-import { db } from "@/lib/firebase";
-import { collection, getDocs } from "firebase/firestore";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function sitemap() {
   const baseUrl = "https://humanbiomedicals.net";
@@ -73,18 +75,14 @@ export default async function sitemap() {
       }
     });
 
-    // 2. Fetch & Include Serviceable District Hub Pages
-    const districtSnap = await getDocs(
-      collection(db, "websites", "humanbiomedicalsnet", "districts")
-    );
-
-    districtSnap.docs.forEach((docSnap) => {
-      const data = docSnap.data();
-      const slug = data.slug || docSnap.id;
+    // 2. Fetch & Include Serviceable District Hub Pages from SQLite Admin API
+    const districts = await fetchDistricts();
+    districts.forEach((docData) => {
+      const slug = docData.slug || docData.id || docData.district;
       if (!slug) return;
 
       urls.push({
-        url: `${baseUrl}/${slug}`,
+        url: `${baseUrl}/${slug.toLowerCase().replace(/\s+/g, "-")}`,
         lastModified: now,
         changeFrequency: "weekly",
         priority: 0.8,

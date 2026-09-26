@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -16,6 +14,7 @@ export default function Footer() {
   const [contactInfo, setContactInfo] = useState([]);
   const [loading, setLoading] = useState(true);
   const [districtData, setDistrictData] = useState(null);
+  const [categories, setCategories] = useState([]);
 
   const pathname = usePathname();
 
@@ -40,25 +39,16 @@ export default function Footer() {
   useEffect(() => {
     const loadContact = async () => {
       try {
-        const snap = await getDoc(
-          doc(
-            db,
-            "websites",
-            "humanbiomedicalsnet",
-            "pages",
-            "contact"
-          )
-        );
-
-        if (snap.exists()) {
-          setContactInfo(
-            snap.data().contactInfo || []
-          );
+        const res = await fetch("/api/site-data?type=contact");
+        if (res.ok) {
+          const json = await res.json();
+          if (json.data?.contactInfo) {
+            setContactInfo(json.data.contactInfo || []);
+          }
         }
-
-        setLoading(false);
       } catch (err) {
-        console.log(err);
+        console.log("Error loading footer contact info:", err);
+      } finally {
         setLoading(false);
       }
     };
@@ -71,41 +61,36 @@ export default function Footer() {
       if (!district) return;
 
       try {
-        const snap = await getDoc(
-          doc(
-            db,
-            "websites",
-            "humanbiomedicalsnet",
-            "districts",
-            district
-          )
-        );
-
-        if (snap.exists()) {
-          setDistrictData(snap.data());
+        const res = await fetch(`/api/site-data?type=districts&district=${encodeURIComponent(district)}`);
+        if (res.ok) {
+          const json = await res.json();
+          if (json.data) {
+            setDistrictData(json.data);
+          }
         }
       } catch (err) {
-        console.log(err);
+        console.log("Error loading footer district data:", err);
       }
     };
 
     loadDistrict();
   }, [district]);
 
-  const [categories, setCategories] = useState([]);
-
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        const { fetchFullCatalog } = await import("@/lib/data-fetcher");
-        const allProducts = await fetchFullCatalog();
-        const uniqueCats = Array.from(new Set(allProducts.map(p => p.category).filter(Boolean)));
-        uniqueCats.sort((a, b) => {
-          if (a === "Other Products") return 1;
-          if (b === "Other Products") return -1;
-          return a.localeCompare(b);
-        });
-        setCategories(uniqueCats.slice(0, 5));
+        const res = await fetch("/api/catalog", { cache: "no-store" });
+        if (res.ok) {
+          const json = await res.json();
+          const allProducts = json.products || [];
+          const uniqueCats = Array.from(new Set(allProducts.map(p => p.category).filter(Boolean)));
+          uniqueCats.sort((a, b) => {
+            if (a === "Other Products") return 1;
+            if (b === "Other Products") return -1;
+            return a.localeCompare(b);
+          });
+          setCategories(uniqueCats.slice(0, 5));
+        }
       } catch (err) {
         console.error("Error fetching footer categories:", err);
       }
@@ -120,22 +105,18 @@ export default function Footer() {
     return found ? found.value : "";
   };
 
-  const defaultPhones = ["+91 9983123469", "+91 9983333489"];
-  const defaultEmail = "rajbiosis@yahoo.in";
-  const defaultAddress = "F-4, 1st Floor, Plot No. 16, D-Block Tagore Nagar, 200 Feet Bypass Rd, Jaipur, Rajasthan 302021, India";
-
   const phone = getContactField(["phone", "phone number", "mobile", "mobile number"]);
-  const email = getContactField(["email", "email address"]) || defaultEmail;
-  const address = getContactField(["address", "office address", "address/office address"]) || defaultAddress;
+  const email = getContactField(["email", "email address"]);
+  const address = getContactField(["address", "office address", "address/office address"]);
 
   const dynamicAddress =
     districtData
-      ? `${districtData.district}, ${districtData.state}, India`
+      ? `${districtData.district || ""}${districtData.state ? `, ${districtData.state}` : ""}${districtData.country ? `, ${districtData.country}` : ""}`.trim()
       : address;
 
-  let phoneValues = defaultPhones;
+  let phoneValues = [];
   if (Array.isArray(phone) && phone.length > 0) {
-    phoneValues = phone.map(p => String(p).trim());
+    phoneValues = phone.map(p => String(p).trim()).filter(Boolean);
   } else if (phone !== null && phone !== undefined && phone !== "") {
     const parsed = String(phone).split(/[\n,]+/).map(p => p.trim()).filter(Boolean);
     if (parsed.length > 0) phoneValues = parsed;
@@ -249,29 +230,38 @@ export default function Footer() {
           <div className="lg:col-span-3">
             <h3 className="text-lg font-bold text-slate-900 mb-5">Contact Info</h3>
             <div className="space-y-4 text-sm text-slate-600 font-medium">
-              <div className="flex items-start gap-3">
-                <MapPin size={18} className="mt-0.5 text-emerald-600 flex-shrink-0" />
-                <p>{dynamicAddress}</p>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <Phone size={18} className="mt-0.5 text-emerald-600 flex-shrink-0" />
-                <div className="flex flex-col">
-                  {phoneValues.map((num, idx) => (
-                    <a key={idx} href={`tel:${num}`} className="hover:text-emerald-600 transition">
-                      {num}
-                    </a>
-                  ))}
-                  {phoneValues.length === 0 && <p>N/A</p>}
+              {dynamicAddress && (
+                <div className="flex items-start gap-3">
+                  <MapPin size={18} className="mt-0.5 text-emerald-600 flex-shrink-0" />
+                  <p>{dynamicAddress}</p>
                 </div>
-              </div>
+              )}
 
-              <div className="flex items-center gap-3">
-                <Mail size={18} className="text-emerald-600 flex-shrink-0" />
-                <a href={`mailto:${email}`} className="hover:text-emerald-600 transition">
-                  {email}
-                </a>
-              </div>
+              {phoneValues.length > 0 && (
+                <div className="flex items-start gap-3">
+                  <Phone size={18} className="mt-0.5 text-emerald-600 flex-shrink-0" />
+                  <div className="flex flex-col">
+                    {phoneValues.map((num, idx) => (
+                      <a key={idx} href={`tel:${num}`} className="hover:text-emerald-600 transition">
+                        {num}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {email && (
+                <div className="flex items-center gap-3">
+                  <Mail size={18} className="text-emerald-600 flex-shrink-0" />
+                  <a href={`mailto:${email}`} className="hover:text-emerald-600 transition">
+                    {email}
+                  </a>
+                </div>
+              )}
+
+              {!dynamicAddress && phoneValues.length === 0 && !email && (
+                <p className="text-slate-400 text-sm">Contact details available upon inquiry.</p>
+              )}
             </div>
           </div>
 

@@ -1,5 +1,5 @@
-import { fetchFullCatalog } from "@/lib/data-fetcher";
 import { NextResponse } from "next/server";
+import { fetchFullCatalog, ADMIN_API_BASE_URL, WEBSITE_ID } from "@/lib/admin-api";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -8,7 +8,7 @@ export async function GET(request) {
   try {
     const products = await fetchFullCatalog();
 
-    // Group categories and subcategories for easy consumer consumption
+    // Group categories and subcategories for structured consumption
     const categoriesMap = {};
     products.forEach((p) => {
       const cat = p.category || "Other Products";
@@ -39,7 +39,8 @@ export async function GET(request) {
     return NextResponse.json(
       {
         success: true,
-        websiteId: "humanbiomedicalsnet",
+        websiteId: WEBSITE_ID,
+        adminApiBaseUrl: ADMIN_API_BASE_URL,
         total: products.length,
         categories: categoriesList,
         products,

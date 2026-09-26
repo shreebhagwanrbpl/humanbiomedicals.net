@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 
 import {
   ArrowRight,
@@ -25,10 +23,10 @@ export default function HeroSection({ city }) {
   const [activeSlide, setActiveSlide] = useState(0);
 
   const [heroData, setHeroData] = useState({
-    title: "Simple & Reliable Medical Equipment For Hospitals & Labs",
-    description: "We supply high-quality diagnostic machines, testing instruments, and fast repair services so your clinic can deliver fast and clear health reports every day.",
-    button1Text: "View Our Products",
-    button2Text: "Get Free Quote",
+    title: "",
+    description: "",
+    button1Text: "",
+    button2Text: "",
   });
 
   // Featured Product Carousel Slides (Clean, Light-Theme Interactive Cards)
@@ -82,19 +80,18 @@ export default function HeroSection({ city }) {
   useEffect(() => {
     const fetchHeroData = async () => {
       try {
-        const snap = await getDoc(
-          doc(db, "websites", "humanbiomedicalsnet", "pages", "home")
-        );
-
-        if (snap.exists()) {
-          const data = snap.data();
-          setHeroData((prev) => ({
-            ...prev,
-            title: data.title || prev.title,
-            description: data.description || prev.description,
-            button1Text: data.button1Text || prev.button1Text,
-            button2Text: data.button2Text || prev.button2Text,
-          }));
+        const res = await fetch("/api/site-data?type=home");
+        if (res.ok) {
+          const json = await res.json();
+          if (json.data) {
+            const data = json.data;
+            setHeroData({
+              title: data.title || "",
+              description: data.description || "",
+              button1Text: data.button1Text || "",
+              button2Text: data.button2Text || "",
+            });
+          }
         }
       } catch (error) {
         console.error("Error fetching hero data:", error);
@@ -139,26 +136,24 @@ export default function HeroSection({ city }) {
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold leading-tight text-slate-900 tracking-tight">
-            {loading ? (
-              <div className="animate-pulse space-y-4">
-                <div className="h-12 bg-emerald-100/60 rounded-xl w-[85%]" />
-                <div className="h-12 bg-emerald-100/60 rounded-xl w-[65%]" />
-              </div>
-            ) : (
-              <>
-                {heroData.title}
-                {city && (
-                  <>
-                    <br />
-                    <span className="text-emerald-600 font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600">
-                      in {city}
-                    </span>
-                  </>
-                )}
-              </>
-            )}
-          </h1>
+          {loading ? (
+            <div className="animate-pulse space-y-4">
+              <div className="h-12 bg-emerald-100/60 rounded-xl w-[85%]" />
+              <div className="h-12 bg-emerald-100/60 rounded-xl w-[65%]" />
+            </div>
+          ) : heroData.title ? (
+            <h1 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold leading-tight text-slate-900 tracking-tight">
+              {heroData.title}
+              {city && (
+                <>
+                  <br />
+                  <span className="text-emerald-600 font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600">
+                    in {city}
+                  </span>
+                </>
+              )}
+            </h1>
+          ) : null}
 
           {/* Description */}
           {loading ? (
@@ -166,7 +161,7 @@ export default function HeroSection({ city }) {
               <div className="h-4 bg-emerald-100/60 rounded-full w-full" />
               <div className="h-4 bg-emerald-100/60 rounded-full w-[90%]" />
             </div>
-          ) : (
+          ) : heroData.description ? (
             <p className="mt-6 text-slate-600 text-base sm:text-lg leading-relaxed max-w-xl">
               {heroData.description}
               {city && (
@@ -176,23 +171,29 @@ export default function HeroSection({ city }) {
                 </>
               )}
             </p>
-          )}
+          ) : null}
 
-          {/* Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 mt-8">
-            <Link href={makeLink("/items")}>
-              <button className="w-full sm:w-auto group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold shadow-lg shadow-emerald-500/20 transition-all duration-300 hover:-translate-y-0.5">
-                <span>{heroData.button1Text || "View Our Products"}</span>
-                <ArrowRight size={18} className="transition-transform duration-300 group-hover:translate-x-1" />
-              </button>
-            </Link>
+          {/* Buttons (Static Links, Dynamic Text Only) */}
+          {(heroData.button1Text || heroData.button2Text) ? (
+            <div className="flex flex-col sm:flex-row gap-4 mt-8">
+              {heroData.button1Text && (
+                <Link href={makeLink("/items")}>
+                  <button className="w-full sm:w-auto group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold shadow-lg shadow-emerald-500/20 transition-all duration-300 hover:-translate-y-0.5">
+                    <span>{heroData.button1Text}</span>
+                    <ArrowRight size={18} className="transition-transform duration-300 group-hover:translate-x-1" />
+                  </button>
+                </Link>
+              )}
 
-            <Link href={makeLink("/contact")}>
-              <button className="w-full sm:w-auto inline-flex items-center justify-center px-7 py-3.5 rounded-2xl border-2 border-emerald-600 text-emerald-700 hover:bg-emerald-50 font-semibold transition-all duration-300">
-                {heroData.button2Text || "Get Free Quote"}
-              </button>
-            </Link>
-          </div>
+              {heroData.button2Text && (
+                <Link href={makeLink("/contact")}>
+                  <button className="w-full sm:w-auto inline-flex items-center justify-center px-7 py-3.5 rounded-2xl border-2 border-emerald-600 text-emerald-700 hover:bg-emerald-50 font-semibold transition-all duration-300">
+                    {heroData.button2Text}
+                  </button>
+                </Link>
+              )}
+            </div>
+          ) : null}
 
           {/* Stats Bar */}
           <div className="grid grid-cols-3 gap-4 mt-12 pt-8 border-t border-emerald-100">
@@ -242,7 +243,7 @@ export default function HeroSection({ city }) {
               </div>
             </div>
 
-            {/* Slide Body (Animate Presence for Smooth Slide Transition) */}
+            {/* Slide Body */}
             <div className="my-6">
               <AnimatePresence mode="wait">
                 <motion.div

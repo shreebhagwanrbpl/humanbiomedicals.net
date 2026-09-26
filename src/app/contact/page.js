@@ -1,13 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import {
-  doc,
-  getDoc,
-  addDoc,
-  collection,
-} from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import toast from "react-hot-toast";
 import {
   Mail,
@@ -40,7 +33,7 @@ export default function ContactPage() {
   });
 
   const pathParts = pathname.split("/").filter(Boolean);
-  const currentDistrict = pathParts.length > 0 ? pathParts[0] : null;
+  const currentDistrict = pathParts.length > 0 && !["about", "services", "items", "contact", "products"].includes(pathParts[0]) ? pathParts[0] : null;
 
   const handleChange = (e) => {
     setForm({
@@ -74,18 +67,22 @@ export default function ContactPage() {
     try {
       setSubmitting(true);
 
-      await addDoc(
-        collection(
-          db,
-          "websitesQueries",
-          "humanbiomedicalsnet",
-          "contactQueries"
-        ),
-        {
+      const res = await fetch("/api/contact-query", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           ...form,
-          createdAt: new Date(),
-        }
-      );
+          district: currentDistrict || "",
+        }),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok || !result.success) {
+        throw new Error(result.error || "Failed to submit inquiry");
+      }
 
       toast.success(
         "Thank you! Your inquiry has been submitted. Our technical sales expert will call you shortly."
@@ -101,7 +98,7 @@ export default function ContactPage() {
     } catch (err) {
       console.error("Error submitting form:", err);
       toast.error(
-        "Failed to send message. Please call our hotline directly at +91 9983123469."
+        err.message || "Failed to send message. Please try again."
       );
     } finally {
       setSubmitting(false);
@@ -113,18 +110,12 @@ export default function ContactPage() {
       if (!currentDistrict) return;
 
       try {
-        const snap = await getDoc(
-          doc(
-            db,
-            "websites",
-            "humanbiomedicalsnet",
-            "districts",
-            currentDistrict
-          )
-        );
-
-        if (snap.exists()) {
-          setDistrictData(snap.data());
+        const res = await fetch(`/api/site-data?type=districts&district=${encodeURIComponent(currentDistrict)}`);
+        if (res.ok) {
+          const json = await res.json();
+          if (json.data) {
+            setDistrictData(json.data);
+          }
         }
       } catch (err) {
         console.log("District loading error:", err);
@@ -137,18 +128,12 @@ export default function ContactPage() {
   useEffect(() => {
     const loadContact = async () => {
       try {
-        const snap = await getDoc(
-          doc(
-            db,
-            "websites",
-            "humanbiomedicalsnet",
-            "pages",
-            "contact"
-          )
-        );
-
-        if (snap.exists()) {
-          setContactInfo(snap.data().contactInfo || []);
+        const res = await fetch("/api/site-data?type=contact");
+        if (res.ok) {
+          const json = await res.json();
+          if (json.data?.contactInfo) {
+            setContactInfo(json.data.contactInfo || []);
+          }
         }
       } catch (err) {
         console.log("Contact info loading error:", err);
@@ -167,30 +152,24 @@ export default function ContactPage() {
     return found ? found.value : "";
   };
 
-  // Robust Fallback Contact Data
-  const defaultPhones = ["+91 9983123469", "+91 9983333489"];
-  const defaultEmail = "rajbiosis@yahoo.in";
-  const defaultAddress = "F-4, 1st Floor, Plot No. 16, D-Block Tagore Nagar, 200 Feet Bypass Rd, Jaipur, Rajasthan 302021, India";
-  const defaultHours = "Monday - Saturday: 9:00 AM - 7:00 PM (IST)";
-
   const phone = getContactField(["phone", "phone number", "mobile", "mobile number"]);
-  const email = getContactField(["email", "email address"]) || defaultEmail;
-  const address = getContactField(["address", "office address", "address/office address"]) || defaultAddress;
-  const hours = getContactField(["working hours", "hours", "work hours"]) || defaultHours;
+  const email = getContactField(["email", "email address"]);
+  const address = getContactField(["address", "office address", "address/office address"]);
+  const hours = getContactField(["working hours", "hours", "work hours"]);
 
   const dynamicAddress = districtData
-    ? `${districtData.district}, ${districtData.state}, India`
+    ? `${districtData.district || ""}${districtData.state ? `, ${districtData.state}` : ""}${districtData.country ? `, ${districtData.country}` : ""}`.trim()
     : address;
 
-  let phoneValues = defaultPhones;
+  let phoneValues = [];
   if (Array.isArray(phone) && phone.length > 0) {
-    phoneValues = phone.map((p) => String(p).trim());
+    phoneValues = phone.map((p) => String(p).trim()).filter(Boolean);
   } else if (phone !== null && phone !== undefined && phone !== "") {
     const parsed = String(phone).split(/[\n,]+/).map((p) => p.trim()).filter(Boolean);
     if (parsed.length > 0) phoneValues = parsed;
   }
 
-  const mapAddress = encodeURIComponent(dynamicAddress);
+  const mapAddress = encodeURIComponent(dynamicAddress || "Jaipur, Rajasthan, India");
 
   const contactFaqs = [
     {
@@ -207,7 +186,7 @@ export default function ContactPage() {
     },
     {
       q: "How can I obtain a formal quotation for hospital procurement?",
-      a: "Submit your equipment requirements using the message form on this page or email your RFP to rajbiosis@yahoo.in for instant commercial quotes."
+      a: "Submit your equipment requirements using the message form on this page for instant commercial quotes."
     }
   ];
 
@@ -258,18 +237,22 @@ export default function ContactPage() {
                 <p className="text-xs text-emerald-50 leading-relaxed mb-4">
                   For immediate analyzer repairs or laboratory machine breakdowns, call our direct engineering line:
                 </p>
-                <div className="flex flex-wrap gap-2">
-                  {phoneValues.map((num, idx) => (
-                    <a
-                      key={idx}
-                      href={`tel:${num}`}
-                      className="inline-flex items-center gap-2 bg-white text-emerald-800 font-bold px-4 py-2 rounded-xl text-sm hover:bg-emerald-50 transition shadow-sm"
-                    >
-                      <Phone size={16} />
-                      <span>{num}</span>
-                    </a>
-                  ))}
-                </div>
+                {phoneValues.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {phoneValues.map((num, idx) => (
+                      <a
+                        key={idx}
+                        href={`tel:${num}`}
+                        className="inline-flex items-center gap-2 bg-white text-emerald-800 font-bold px-4 py-2 rounded-xl text-sm hover:bg-emerald-50 transition shadow-sm"
+                      >
+                        <Phone size={16} />
+                        <span>{num}</span>
+                      </a>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-emerald-100 font-medium">Submit inquiry below for instant phone support callback.</p>
+                )}
               </div>
 
               {/* Phone Card */}
@@ -281,13 +264,17 @@ export default function ContactPage() {
                   <h4 className="font-bold text-slate-900 text-lg">Direct Phone & WhatsApp</h4>
                   <p className="text-xs text-slate-500 mb-2">Mon - Sat from 9:00 AM to 7:00 PM</p>
                   <div className="text-slate-700 font-semibold space-y-1">
-                    {phoneValues.map((num, idx) => (
-                      <div key={idx}>
-                        <a href={`tel:${num}`} className="hover:text-emerald-600 transition block">
-                          {num}
-                        </a>
-                      </div>
-                    ))}
+                    {phoneValues.length > 0 ? (
+                      phoneValues.map((num, idx) => (
+                        <div key={idx}>
+                          <a href={`tel:${num}`} className="hover:text-emerald-600 transition block">
+                            {num}
+                          </a>
+                        </div>
+                      ))
+                    ) : (
+                      <span className="text-slate-400 text-sm font-normal">Contact number available via query</span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -300,9 +287,13 @@ export default function ContactPage() {
                 <div>
                   <h4 className="font-bold text-slate-900 text-lg">Sales & Official Email</h4>
                   <p className="text-xs text-slate-500 mb-2">Send official RFPs, purchase orders & inquiries</p>
-                  <a href={`mailto:${email}`} className="text-slate-700 font-semibold hover:text-emerald-600 transition block">
-                    {email}
-                  </a>
+                  {email ? (
+                    <a href={`mailto:${email}`} className="text-slate-700 font-semibold hover:text-emerald-600 transition block">
+                      {email}
+                    </a>
+                  ) : (
+                    <span className="text-slate-400 text-sm font-normal">Direct messaging via inquiry form</span>
+                  )}
                 </div>
               </div>
 
@@ -314,7 +305,7 @@ export default function ContactPage() {
                 <div>
                   <h4 className="font-bold text-slate-900 text-lg">Headquarters & Service Depot</h4>
                   <p className="text-slate-600 text-sm mt-1 leading-relaxed">
-                    {dynamicAddress}
+                    {dynamicAddress || "Serving healthcare and diagnostic facilities across India"}
                   </p>
                 </div>
               </div>
@@ -327,7 +318,7 @@ export default function ContactPage() {
                 <div>
                   <h4 className="font-bold text-slate-900 text-lg">Working Hours</h4>
                   <p className="text-slate-600 text-sm mt-1">
-                    {hours}
+                    {hours || "Monday - Saturday: 9:00 AM - 7:00 PM (IST)"}
                   </p>
                 </div>
               </div>
@@ -465,7 +456,7 @@ export default function ContactPage() {
                   Visit Our Regional Facility
                 </h3>
                 <p className="text-sm text-slate-500 mt-1">
-                  Our main service hub and equipment demonstration room in Jaipur, Rajasthan.
+                  Our main service hub and equipment demonstration room.
                 </p>
               </div>
 
