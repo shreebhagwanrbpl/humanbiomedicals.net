@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { fetchHomeData } from "@/lib/data-fetcher";
 import {
   ArrowRight,
   ShieldCheck,
@@ -16,6 +16,10 @@ import {
   ChevronRight,
   CheckCircle2,
   Sparkles,
+  PhoneCall,
+  Award,
+  Layers,
+  Clock,
 } from "lucide-react";
 
 export default function HeroSection({ city }) {
@@ -23,252 +27,282 @@ export default function HeroSection({ city }) {
   const [activeSlide, setActiveSlide] = useState(0);
 
   const [heroData, setHeroData] = useState({
-    title: "",
-    description: "",
-    button1Text: "",
-    button2Text: "",
+    title: "Complete Diagnostic Analyzers, Pathology Devices & Medical Equipment",
+    description: "Human Biomedicals is your trusted partner for turnkey clinical laboratory setup, offering cutting-edge diagnostic analyzers, ISO-compliant calibration, certified reagents, and nationwide biomedical maintenance support.",
+    button1Text: "Explore Full Catalog",
+    button2Text: "Consult Our Specialists",
   });
 
-  // Featured Product Carousel Slides (Clean, Light-Theme Interactive Cards)
+  // Featured Medical Product Showcase Slides
   const carouselSlides = [
     {
       id: 1,
-      badge: "Blood Cell Testing",
-      title: "Hematology Machines",
-      category: "Blood Testing",
-      description: "Fast blood cell counting machines that give complete CBC reports in less than one minute with simple touch controls.",
-      icon: <Activity className="w-8 h-8 text-emerald-600" />,
+      badge: "Fast CBC & Cell Counts",
+      title: "Hematology Analyzers",
+      category: "Blood Diagnostics",
+      description: "Automated 3-part & 5-part differential cell counters delivering precision CBC reports in under 60 seconds with micro-sample volume.",
+      icon: <Activity className="w-7 h-7 text-emerald-600" />,
       color: "from-emerald-500/10 via-teal-500/5 to-cyan-500/10",
       accent: "#00B7A0",
-      specs: ["60 Tests Every Hour", "Tiny Sample Needed", "Easy Touch Display"],
+      specs: ["60+ Tests / Hour", "Micro Sample Need", "Digital Touch Control"],
+      link: "/items?category=Hematology+Analyzer",
     },
     {
       id: 2,
-      badge: "Chemistry & Organ Tests",
+      badge: "Clinical Chemistry & Organ Panels",
       title: "Biochemistry Analyzers",
-      category: "Organ Function Tests",
-      description: "Reliable testing instruments designed to measure liver, kidney, and blood sugar levels quickly and accurately.",
-      icon: <FlaskConical className="w-8 h-8 text-teal-600" />,
+      category: "Clinical Chemistry",
+      description: "High-throughput semi & fully automated systems for accurate Liver, Kidney, Lipid profiles, and routine clinical pathology tests.",
+      icon: <FlaskConical className="w-7 h-7 text-teal-600" />,
       color: "from-teal-500/10 via-emerald-500/5 to-emerald-500/10",
       accent: "#00A896",
-      specs: ["Dual Reading Modes", "Live Test Tracking", "Built-In Ticket Printer"],
+      specs: ["Dual Flowcell Modes", "Real-time Reaction Curve", "Built-in Thermal Printer"],
+      link: "/items?category=Biochemistry+Analyzer",
     },
     {
       id: 3,
-      badge: "Instant Salts & Minerals",
+      badge: "Rapid Ions & Critical Care",
       title: "Electrolyte Testers",
       category: "Critical Care Testing",
-      description: "Smart sensor machines that check sodium, potassium, and calcium levels with zero hassle and low maintenance.",
-      icon: <HeartPulse className="w-8 h-8 text-emerald-700" />,
+      description: "Solid-state ion-selective electrode systems measuring Na+, K+, Cl-, and iCa++ levels with rapid 30-second automated cycle times.",
+      icon: <HeartPulse className="w-7 h-7 text-emerald-700" />,
       color: "from-emerald-600/10 via-cyan-500/5 to-teal-500/10",
       accent: "#028090",
       specs: ["Smart Sensor Tech", "Self Calibration", "Results in 30 Seconds"],
+      link: "/items?category=Electrolyte+Analyzer",
     },
     {
       id: 4,
-      badge: "Hormone & Immunity Care",
-      title: "ELISA Readers & Washers",
-      category: "Immune System Testing",
-      description: "High-precision microplate readers for virus testing, hormone checks, and allergy diagnostic labs.",
-      icon: <Microscope className="w-8 h-8 text-teal-700" />,
+      badge: "Certified Test Strips & Reagents",
+      title: "Diagnostic Test Strips",
+      category: "Point of Care Testing",
+      description: "Precision disposable reagent strips for Hemoglobin, Blood Glucose, and Urine analysis with maximum diagnostic accuracy.",
+      icon: <Layers className="w-7 h-7 text-teal-700" />,
       color: "from-teal-600/10 via-emerald-500/5 to-cyan-600/10",
       accent: "#05668D",
-      specs: ["8 Light Sensors", "Big Memory Storage", "Simple PC Software"],
+      specs: ["Immediate Results", "NABL Standard Reagents", "Bulk Stock Available"],
+      link: "/items?category=Test+Strips",
     },
   ];
 
   useEffect(() => {
-    const fetchHeroData = async () => {
+    let isMounted = true;
+    const loadHero = async () => {
       try {
-        const res = await fetch("/api/site-data?type=home");
-        if (res.ok) {
-          const json = await res.json();
-          if (json.data) {
-            const data = json.data;
-            setHeroData({
-              title: data.title || "",
-              description: data.description || "",
-              button1Text: data.button1Text || "",
-              button2Text: data.button2Text || "",
-            });
-          }
+        const homeData = await fetchHomeData();
+        if (isMounted && homeData) {
+          setHeroData((prev) => ({
+            ...prev,
+            title: homeData.title || homeData.heroTitle || prev.title,
+            description: homeData.description || homeData.heroDesc || prev.description,
+            button1Text: homeData.button1Text || prev.button1Text,
+            button2Text: homeData.button2Text || prev.button2Text,
+          }));
         }
-      } catch (error) {
-        console.error("Error fetching hero data:", error);
+      } catch (err) {
+        console.warn("[HeroSection] Using default dynamic hero data:", err);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
 
-    fetchHeroData();
+    loadHero();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  // Auto-advance Carousel
+  // Auto-advance Carousel every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveSlide((prev) => (prev + 1) % carouselSlides.length);
-    }, 5000);
+    }, 5500);
     return () => clearInterval(interval);
   }, [carouselSlides.length]);
 
-  // District Routing Helper
   const districtSlug = city ? city.toLowerCase().replace(/\s+/g, "-") : "";
   const makeLink = (path) => (districtSlug ? `/${districtSlug}${path}` : path);
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-slate-50 via-emerald-50/20 to-white pt-10 pb-20 lg:pt-16 lg:pb-28">
-      {/* Background Ambient Glows (Light Mode Only) */}
-      <div className="absolute -top-32 -left-32 w-96 h-96 bg-emerald-200/30 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-teal-200/30 rounded-full blur-[140px] pointer-events-none" />
+    <section className="relative overflow-hidden bg-gradient-to-b from-slate-50 via-emerald-50/25 to-white pt-12 pb-20 lg:pt-16 lg:pb-28">
+      {/* Dynamic Background Ambient Blur Lights */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-emerald-200/35 to-teal-100/20 rounded-full blur-[130px] pointer-events-none" />
+      <div className="absolute -bottom-20 right-10 w-[450px] h-[450px] bg-gradient-to-tl from-teal-200/30 to-cyan-100/20 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="container-custom relative z-10 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-        {/* Left Column: Hero Text & Call-To-Action */}
+      <div className="container-custom relative z-10 grid lg:grid-cols-12 gap-12 lg:gap-14 items-center">
+        {/* Left Column (7 cols): Hero Text & Value Props */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
+          className="lg:col-span-7 flex flex-col justify-center"
         >
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-white border border-emerald-200 text-emerald-800 px-4 py-2 rounded-full text-xs sm:text-sm font-semibold mb-6 shadow-sm">
-            <ShieldCheck size={18} className="text-emerald-600" />
-            <span>Trusted & Verified Medical Supplier</span>
-            {city && <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full text-xs">in {city}</span>}
+          {/* Top Medical Trust Badge */}
+          <div className="inline-flex items-center gap-2.5 bg-white/95 backdrop-blur-md border border-emerald-200/80 text-emerald-800 px-4 py-2 rounded-full text-xs sm:text-sm font-semibold mb-6 shadow-sm w-fit">
+            <span className="flex h-2 w-2 relative">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="tracking-wide">Precision Diagnostics • ISO & CE Standard Equipment</span>
+            {city && (
+              <span className="bg-emerald-100 text-emerald-900 px-2.5 py-0.5 rounded-full text-xs font-bold">
+                in {city}
+              </span>
+            )}
           </div>
 
-          {/* Title */}
-          {loading ? (
-            <div className="animate-pulse space-y-4">
-              <div className="h-12 bg-emerald-100/60 rounded-xl w-[85%]" />
-              <div className="h-12 bg-emerald-100/60 rounded-xl w-[65%]" />
-            </div>
-          ) : heroData.title ? (
-            <h1 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold leading-tight text-slate-900 tracking-tight">
-              {heroData.title}
-              {city && (
-                <>
-                  <br />
-                  <span className="text-emerald-600 font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600">
-                    in {city}
+          {/* Main Hero Headline */}
+          <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-black text-slate-900 tracking-tight leading-[1.18] sm:leading-[1.16]">
+            {loading ? (
+              <div className="animate-pulse space-y-3 py-2">
+                <div className="h-10 bg-emerald-100/70 rounded-xl w-[90%]" />
+                <div className="h-10 bg-emerald-100/70 rounded-xl w-[75%]" />
+                <div className="h-10 bg-emerald-100/70 rounded-xl w-[60%]" />
+              </div>
+            ) : (
+              <>
+                <span>Complete Diagnostic Analyzers, Pathology Devices &amp; </span>
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 via-[#00B7A0] to-teal-700">
+                  Medical Equipment
+                </span>
+                {city ? (
+                  <span className="block text-2xl sm:text-3xl lg:text-4xl text-slate-800 mt-2 font-bold">
+                    Supplied Across <span className="text-emerald-600 underline decoration-emerald-300 underline-offset-4">{city}</span>
                   </span>
-                </>
-              )}
-            </h1>
-          ) : null}
+                ) : (
+                  <span className="text-slate-800"> — Human Biomedicals</span>
+                )}
+              </>
+            )}
+          </h1>
 
-          {/* Description */}
+          {/* Hero Subtitle Description */}
           {loading ? (
-            <div className="animate-pulse mt-6 space-y-3">
-              <div className="h-4 bg-emerald-100/60 rounded-full w-full" />
-              <div className="h-4 bg-emerald-100/60 rounded-full w-[90%]" />
+            <div className="animate-pulse mt-5 space-y-2 max-w-xl">
+              <div className="h-4 bg-emerald-100/50 rounded-full w-full" />
+              <div className="h-4 bg-emerald-100/50 rounded-full w-[85%]" />
             </div>
-          ) : heroData.description ? (
-            <p className="mt-6 text-slate-600 text-base sm:text-lg leading-relaxed max-w-xl">
+          ) : (
+            <p className="mt-5 text-slate-600 text-sm sm:text-base lg:text-[16.5px] leading-relaxed max-w-2xl font-normal">
               {heroData.description}
-              {city && (
-                <>
-                  {" "}We bring quick setup, full warranty, and friendly engineer support across{" "}
-                  <strong className="text-emerald-700 font-semibold">{city}</strong>.
-                </>
-              )}
             </p>
-          ) : null}
+          )}
 
-          {/* Buttons (Static Links, Dynamic Text Only) */}
-          {(heroData.button1Text || heroData.button2Text) ? (
-            <div className="flex flex-col sm:flex-row gap-4 mt-8">
-              {heroData.button1Text && (
-                <Link href={makeLink("/items")}>
-                  <button className="w-full sm:w-auto group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold shadow-lg shadow-emerald-500/20 transition-all duration-300 hover:-translate-y-0.5">
-                    <span>{heroData.button1Text}</span>
-                    <ArrowRight size={18} className="transition-transform duration-300 group-hover:translate-x-1" />
-                  </button>
-                </Link>
-              )}
+          {/* Key Value Micro-Pills */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mt-6 max-w-2xl">
+            <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-slate-200/80 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm">
+              <CheckCircle2 size={15} className="text-emerald-600 flex-shrink-0" />
+              <span className="truncate">100% Genuine Certified</span>
+            </div>
+            <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-slate-200/80 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm">
+              <CheckCircle2 size={15} className="text-emerald-600 flex-shrink-0" />
+              <span className="truncate">Pan-India Dispatch</span>
+            </div>
+            <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-slate-200/80 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm">
+              <CheckCircle2 size={15} className="text-emerald-600 flex-shrink-0" />
+              <span className="truncate">Engineer AMC Support</span>
+            </div>
+          </div>
 
-              {heroData.button2Text && (
-                <Link href={makeLink("/contact")}>
-                  <button className="w-full sm:w-auto inline-flex items-center justify-center px-7 py-3.5 rounded-2xl border-2 border-emerald-600 text-emerald-700 hover:bg-emerald-50 font-semibold transition-all duration-300">
-                    {heroData.button2Text}
-                  </button>
-                </Link>
-              )}
-            </div>
-          ) : null}
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mt-8">
+            <Link href={makeLink("/items")}>
+              <button
+                suppressHydrationWarning
+                className="w-full sm:w-auto group inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-gradient-to-r from-[#00B7A0] to-[#059669] hover:from-[#00A38E] hover:to-[#047857] text-white font-bold text-sm shadow-[0_10px_25px_rgba(0,183,160,0.3)] transition-all duration-300 hover:-translate-y-0.5 cursor-pointer border-0"
+              >
+                <span>{heroData.button1Text || "Explore Full Portfolio"}</span>
+                <ArrowRight size={17} className="transition-transform duration-300 group-hover:translate-x-1" />
+              </button>
+            </Link>
 
-          {/* Stats Bar */}
-          <div className="grid grid-cols-3 gap-4 mt-12 pt-8 border-t border-emerald-100">
+            <Link href={makeLink("/contact")}>
+              <button
+                suppressHydrationWarning
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-2xl bg-white hover:bg-emerald-50/60 border border-slate-200 hover:border-emerald-400 text-slate-800 hover:text-emerald-800 font-bold text-sm shadow-sm transition-all duration-300 cursor-pointer"
+              >
+                <PhoneCall size={16} className="text-emerald-600" />
+                <span>{heroData.button2Text || "Consult Our Specialists"}</span>
+              </button>
+            </Link>
+          </div>
+
+          {/* Mini Stats Bar */}
+          <div className="grid grid-cols-3 gap-6 mt-10 pt-6 border-t border-slate-200/80 max-w-xl">
             <div>
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-emerald-600">10+</h3>
-              <p className="text-xs sm:text-sm text-slate-500 mt-0.5 font-medium">Years Helping Labs</p>
+              <div className="text-2xl lg:text-3xl font-black text-slate-900">10+</div>
+              <p className="text-xs text-slate-500 font-medium mt-0.5">Years Helping Labs</p>
             </div>
             <div>
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-emerald-600">500+</h3>
-              <p className="text-xs sm:text-sm text-slate-500 mt-0.5 font-medium">Clinics Served</p>
+              <div className="text-2xl lg:text-3xl font-black text-slate-900">500+</div>
+              <p className="text-xs text-slate-500 font-medium mt-0.5">Clinics Equipped</p>
             </div>
             <div>
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-emerald-600">100%</h3>
-              <p className="text-xs sm:text-sm text-slate-500 mt-0.5 font-medium">Quality Checked</p>
+              <div className="text-2xl lg:text-3xl font-black text-slate-900">100%</div>
+              <p className="text-xs text-slate-500 font-medium mt-0.5">Calibrated &amp; Tested</p>
             </div>
           </div>
         </motion.div>
 
-        {/* Right Column: Dynamic Interactive Light-Theme Product Showcase Carousel */}
+        {/* Right Column (5 cols): Interactive Medical Card Showcase */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7 }}
-          className="relative"
+          transition={{ duration: 0.7, delay: 0.15 }}
+          className="lg:col-span-5 relative"
         >
-          {/* Main Showcase Container */}
-          <div className="relative rounded-[36px] bg-white border border-emerald-100 shadow-[0_20px_70px_rgba(0,183,160,0.12)] p-6 sm:p-8 min-h-[460px] flex flex-col justify-between overflow-hidden">
+          {/* Main Elevated Glass Card */}
+          <div className="relative rounded-[32px] bg-white/95 backdrop-blur-xl border border-emerald-100/90 shadow-[0_25px_60px_rgba(0,183,160,0.14)] p-6 sm:p-7 flex flex-col justify-between overflow-hidden">
             {/* Slide Header */}
-            <div className="flex items-center justify-between gap-4 pb-4 border-b border-slate-100">
+            <div className="flex items-center justify-between gap-3 pb-4 border-b border-slate-100">
               <div className="flex items-center gap-3">
-                <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-100">
+                <div className="p-2.5 rounded-2xl bg-emerald-50 border border-emerald-100 shadow-sm">
                   {carouselSlides[activeSlide].icon}
                 </div>
                 <div>
-                  <span className="text-xs font-semibold text-emerald-600 uppercase tracking-wider">
+                  <span className="text-[11px] font-bold text-emerald-600 uppercase tracking-wider block">
                     {carouselSlides[activeSlide].category}
                   </span>
-                  <h3 className="text-xl font-bold text-slate-900">
+                  <h3 className="text-lg sm:text-xl font-bold text-slate-900">
                     {carouselSlides[activeSlide].title}
                   </h3>
                 </div>
               </div>
 
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-700">
-                <Sparkles size={14} className="text-emerald-600" />
-                <span>{carouselSlides[activeSlide].badge}</span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50/90 border border-emerald-200 text-[11px] font-bold text-emerald-800 shadow-xs">
+                <Sparkles size={13} className="text-emerald-600 flex-shrink-0" />
+                <span className="truncate max-w-[130px]">{carouselSlides[activeSlide].badge}</span>
               </div>
             </div>
 
             {/* Slide Body */}
-            <div className="my-6">
+            <div className="my-5 min-h-[160px]">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeSlide}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.35 }}
-                  className="space-y-6"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -12 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
                 >
-                  <p className="text-slate-600 text-base leading-relaxed">
+                  <p className="text-slate-600 text-sm leading-relaxed">
                     {carouselSlides[activeSlide].description}
                   </p>
 
                   {/* Key Specifications Grid */}
-                  <div className="space-y-2.5">
-                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Key Specifications</h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="space-y-2">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+                      KEY SPECIFICATIONS
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                       {carouselSlides[activeSlide].specs.map((spec, i) => (
                         <div
                           key={i}
-                          className="flex items-center gap-2 p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs font-semibold text-slate-700"
+                          className="flex items-center gap-1.5 p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-[11px] font-semibold text-slate-700"
                         >
-                          <CheckCircle2 size={16} className="text-emerald-600 flex-shrink-0" />
-                          <span>{spec}</span>
+                          <CheckCircle2 size={14} className="text-emerald-600 flex-shrink-0" />
+                          <span className="truncate">{spec}</span>
                         </div>
                       ))}
                     </div>
@@ -278,42 +312,48 @@ export default function HeroSection({ city }) {
             </div>
 
             {/* Slide Footer Navigation */}
-            <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-              {/* Pagination Indicators */}
-              <div className="flex items-center gap-2">
+            <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+              {/* Dots */}
+              <div className="flex items-center gap-1.5">
                 {carouselSlides.map((_, idx) => (
                   <button
                     key={idx}
                     onClick={() => setActiveSlide(idx)}
-                    className={`h-2.5 rounded-full transition-all duration-300 ${
-                      idx === activeSlide ? "w-8 bg-emerald-600" : "w-2.5 bg-slate-200 hover:bg-slate-300"
+                    suppressHydrationWarning
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      idx === activeSlide ? "w-7 bg-[#00B7A0]" : "w-2 bg-slate-200 hover:bg-slate-300"
                     }`}
                     aria-label={`Go to slide ${idx + 1}`}
                   />
                 ))}
               </div>
 
-              {/* Prev / Next Buttons */}
-              <div className="flex items-center gap-3">
+              {/* Prev / Next & Catalog Button */}
+              <div className="flex items-center gap-2">
                 <button
                   onClick={() =>
                     setActiveSlide((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length)
                   }
-                  className="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 text-slate-600 hover:text-emerald-700 transition-all duration-200"
+                  suppressHydrationWarning
+                  className="p-2 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 text-slate-600 hover:text-emerald-700 transition-all cursor-pointer"
                   aria-label="Previous Slide"
                 >
-                  <ChevronLeft size={18} />
+                  <ChevronLeft size={16} />
                 </button>
                 <button
                   onClick={() => setActiveSlide((prev) => (prev + 1) % carouselSlides.length)}
-                  className="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 text-slate-600 hover:text-emerald-700 transition-all duration-200"
+                  suppressHydrationWarning
+                  className="p-2 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 text-slate-600 hover:text-emerald-700 transition-all cursor-pointer"
                   aria-label="Next Slide"
                 >
-                  <ChevronRight size={18} />
+                  <ChevronRight size={16} />
                 </button>
 
-                <Link href={makeLink("/items")}>
-                  <button className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-md transition-all">
+                <Link href={makeLink(carouselSlides[activeSlide].link || "/items")}>
+                  <button
+                    suppressHydrationWarning
+                    className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#00B7A0] to-[#059669] hover:from-[#00A38E] hover:to-[#047857] text-white text-xs font-bold shadow-sm transition-all cursor-pointer border-0"
+                  >
                     View Catalog
                   </button>
                 </Link>
@@ -321,24 +361,25 @@ export default function HeroSection({ city }) {
             </div>
           </div>
 
-          {/* Floating Light Badges */}
-          <div className="absolute -top-5 -left-5 hidden sm:flex items-center gap-3 bg-white/95 backdrop-blur-md border border-emerald-100 rounded-2xl p-3 shadow-lg">
-            <div className="p-2 rounded-xl bg-emerald-100 text-emerald-700">
-              <Microscope size={22} />
+          {/* Floating Trust Badge - Top Left */}
+          <div className="absolute -top-4 -left-4 hidden sm:flex items-center gap-2.5 bg-white/95 backdrop-blur-md border border-emerald-100 rounded-2xl p-2.5 shadow-md">
+            <div className="p-2 rounded-xl bg-emerald-100/80 text-emerald-700">
+              <Microscope size={20} />
             </div>
             <div>
-              <h5 className="text-xs font-bold text-slate-900">Modern Lab Tech</h5>
-              <p className="text-[11px] text-slate-500">Precision Diagnostics</p>
+              <h5 className="text-xs font-bold text-slate-900 leading-tight">Modern Lab Tech</h5>
+              <p className="text-[10px] text-slate-500">Precision Diagnostics</p>
             </div>
           </div>
 
-          <div className="absolute -bottom-5 -right-5 hidden sm:flex items-center gap-3 bg-white/95 backdrop-blur-md border border-emerald-100 rounded-2xl p-3 shadow-lg">
-            <div className="p-2 rounded-xl bg-teal-100 text-teal-700">
-              <BadgeCheck size={22} />
+          {/* Floating Trust Badge - Bottom Right */}
+          <div className="absolute -bottom-4 -right-4 hidden sm:flex items-center gap-2.5 bg-white/95 backdrop-blur-md border border-emerald-100 rounded-2xl p-2.5 shadow-md">
+            <div className="p-2 rounded-xl bg-teal-100/80 text-teal-700">
+              <BadgeCheck size={20} />
             </div>
             <div>
-              <h5 className="text-xs font-bold text-slate-900">100% Genuine</h5>
-              <p className="text-[11px] text-slate-500">Certified Warranty</p>
+              <h5 className="text-xs font-bold text-slate-900 leading-tight">100% Genuine</h5>
+              <p className="text-[10px] text-slate-500">Certified Warranty</p>
             </div>
           </div>
         </motion.div>

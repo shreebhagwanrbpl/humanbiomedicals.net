@@ -1,67 +1,36 @@
 import { NextResponse } from "next/server";
-import { fetchFullCatalog, ADMIN_API_BASE_URL, WEBSITE_ID } from "@/lib/admin-api";
+import { fetchFullCatalog } from "@/lib/data-fetcher";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+export const fetchCache = "force-no-store";
 
-export async function GET(request) {
+export async function GET() {
   try {
-    const products = await fetchFullCatalog();
-
-    // Group categories and subcategories for structured consumption
-    const categoriesMap = {};
-    products.forEach((p) => {
-      const cat = p.category || "Other Products";
-      const sub = p.subCategory || cat;
-      if (!categoriesMap[cat]) {
-        categoriesMap[cat] = {
-          name: cat,
-          subcategories: {},
-          productCount: 0,
-        };
-      }
-      if (!categoriesMap[cat].subcategories[sub]) {
-        categoriesMap[cat].subcategories[sub] = [];
-      }
-      categoriesMap[cat].subcategories[sub].push(p);
-      categoriesMap[cat].productCount++;
-    });
-
-    const categoriesList = Object.entries(categoriesMap).map(([name, data]) => ({
-      name,
-      subcategories: Object.entries(data.subcategories).map(([subName, prods]) => ({
-        name: subName,
-        productsCount: prods.length,
-      })),
-      productCount: data.productCount,
-    }));
+    const products = await fetchFullCatalog(true);
+    const categories = products.categories || [];
 
     return NextResponse.json(
       {
         success: true,
-        websiteId: WEBSITE_ID,
-        adminApiBaseUrl: ADMIN_API_BASE_URL,
-        total: products.length,
-        categories: categoriesList,
+        websiteId: "humanbiomedicalsnet",
         products,
+        categories,
+        categoryProducts: products.categoryProducts || products,
+        normalProducts: products.normalProducts || products,
+        total: products.length,
+        timestamp: Date.now(),
       },
       {
-        status: 200,
         headers: {
-          "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
-          "Pragma": "no-cache",
-          "Expires": "0",
+          "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
         },
       }
     );
   } catch (error) {
-    console.error("API /api/catalog error:", error);
+    console.error("[api/catalog] Error fetching catalog:", error);
     return NextResponse.json(
-      {
-        success: false,
-        error: error.message || "Failed to load catalog",
-        products: [],
-      },
+      { success: false, error: error.message || "Failed to fetch catalog", products: [], categories: [] },
       { status: 500 }
     );
   }

@@ -1,38 +1,32 @@
-import { fetchFullCatalog, WEBSITE_ID, ADMIN_API_BASE_URL } from "@/lib/admin-api";
 import { NextResponse } from "next/server";
+import { fetchFullCatalog } from "@/lib/data-fetcher";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+export const fetchCache = "force-no-store";
 
-export async function GET(request) {
+export async function GET() {
   try {
-    const products = await fetchFullCatalog();
+    const products = await fetchFullCatalog(true);
 
     return NextResponse.json(
       {
         success: true,
-        websiteId: WEBSITE_ID,
-        adminApiBaseUrl: ADMIN_API_BASE_URL,
+        websiteId: "humanbiomedicalsnet",
         count: products.length,
         products,
+        timestamp: Date.now(),
       },
       {
-        status: 200,
         headers: {
-          "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
-          "Pragma": "no-cache",
-          "Expires": "0",
+          "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
         },
       }
     );
   } catch (error) {
-    console.error("API /api/products error:", error);
+    console.error("[api/products] Error fetching products:", error);
     return NextResponse.json(
-      {
-        success: false,
-        error: error.message || "Failed to load products",
-        products: [],
-      },
+      { success: false, error: error.message || "Failed to fetch products", products: [] },
       { status: 500 }
     );
   }
