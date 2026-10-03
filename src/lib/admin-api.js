@@ -6,6 +6,10 @@ export const DEFAULT_COMPANY_ID = "human";
 export const DEFAULT_WEBSITE_ID = "humanbiomedicalsnet";
 export const DEFAULT_ADMIN_API_BASE_URL = "https://admin.rajbiosis.app";
 
+export const COMPANY_ID = DEFAULT_COMPANY_ID;
+export const WEBSITE_ID = DEFAULT_WEBSITE_ID;
+export const ADMIN_API_BASE_URL = DEFAULT_ADMIN_API_BASE_URL;
+
 export function getAdminApiBaseUrl() {
   const url =
     process.env.ADMIN_API_BASE_URL ||
@@ -118,6 +122,8 @@ export async function fetchAdminDistricts({
   return [];
 }
 
+export const fetchDistricts = fetchAdminDistricts;
+
 export async function fetchAdminDistrict(district = "", {
   companyId = DEFAULT_COMPANY_ID,
   websiteId = DEFAULT_WEBSITE_ID,
@@ -125,6 +131,8 @@ export async function fetchAdminDistrict(district = "", {
   if (!district) return null;
   return fetchAdminSiteData("district", { district, companyId, websiteId });
 }
+
+export const fetchDistrict = fetchAdminDistrict;
 
 /**
  * Sends contact & lead queries directly to MongoDB
@@ -153,4 +161,12 @@ export async function submitAdminQuery(data = {}, type = "contact") {
     success: false,
     message: "Unable to submit your enquiry. Please try again.",
   };
+}
+
+export function submitProductQuery(data = {}) {
+  return submitAdminQuery(data, "product");
+}
+
+export function submitContactQuery(data = {}) {
+  return submitAdminQuery(data, "contact");
 }
